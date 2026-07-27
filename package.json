@@ -1,0 +1,19 @@
+{
+  "name": "manafa-user-management",
+  "version": "0.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "@atlaskit/icon": "^37.0.0",
+    "@fontsource-variable/cairo": "^5.2.7",
+    "@vitejs/plugin-react": "5.0.4",
+    "react": "^18.3.1",
+    "react-dom": "^18.3.1",
+    "vite": "6.4.2"
+  }
+}

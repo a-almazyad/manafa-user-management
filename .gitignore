@@ -1,0 +1,13 @@
+node_modules/
+dist/
+.npm-cache/
+.DS_Store
+
+# Local export packages and visual QA captures
+/*.zip
+/comparison-*.png
+/implementation-*.png
+/qa-*.png
+/uc-*.png
+/uc001-*.png
+/uc008-*.png
