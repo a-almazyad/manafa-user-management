@@ -440,7 +440,7 @@ function KycRing() {
   );
 }
 
-function OverviewCards({ onPermissionRequests }) {
+function OverviewCards({ onPermissionRequests, permissionStats }) {
   return (
     <section className="overview-grid" aria-label="User management overview">
       <article className="overview-card pinned-card">
@@ -465,7 +465,10 @@ function OverviewCards({ onPermissionRequests }) {
 
       <article className="overview-card empty-card">
         <CardTitle showAll onShowAll={onPermissionRequests}>Permissions Request</CardTitle>
-        <div className="permission-card-summary"><strong>5 requests</strong><span>1 requires action · 4 historical</span></div>
+        <div className="permission-card-summary">
+          <strong>{permissionStats.total} requests</strong>
+          <span>{permissionStats.active} active · {permissionStats.historical} historical</span>
+        </div>
       </article>
 
       <article className="overview-card owners-card">
@@ -888,6 +891,7 @@ function UsersSection({ users, onAddUser, onNotify }) {
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
+  const [permissionStats, setPermissionStats] = useState({ total: 7, active: 3, historical: 4 });
 
   const isDirectoryTab = activeTab === "Company Users" || activeTab === "Invited Users";
 
@@ -902,7 +906,7 @@ function UsersSection({ users, onAddUser, onNotify }) {
 
   return (
     <>
-      <OverviewCards onPermissionRequests={() => changeTab("Permission Requests")} />
+      <OverviewCards onPermissionRequests={() => changeTab("Permission Requests")} permissionStats={permissionStats} />
       <section className="users-section has-overview" aria-labelledby="users-heading">
         <div className="users-tabs" role="tablist" aria-label="User management views">
           {["Company Users", "Invited Users", "Ownership & Management", "Permission Requests"].map((tab) => (
@@ -935,7 +939,7 @@ function UsersSection({ users, onAddUser, onNotify }) {
         ) : null}
 
         {activeTab === "Ownership & Management" ? <OwnershipManagement onNotify={onNotify} /> : null}
-        {activeTab === "Permission Requests" ? <PermissionRequests onNotify={onNotify} /> : null}
+        {activeTab === "Permission Requests" ? <PermissionRequests onNotify={onNotify} onStatsChange={setPermissionStats} /> : null}
       </section>
     </>
   );

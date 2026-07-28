@@ -1,4 +1,4 @@
-import { useMemo, useState } from "react";
+import { useEffect, useMemo, useState } from "react";
 import ArrowLeftIcon from "@atlaskit/icon/core/arrow-left";
 import CheckCircleIcon from "@atlaskit/icon/core/check-circle";
 import DownloadIcon from "@atlaskit/icon/core/download";
@@ -227,15 +227,66 @@ const changeHistory = [
 
 const permissionRequestsSeed = [
   {
+    id: "PR-2026-0189",
+    type: "Authorization",
+    requestedBy: "أحمد خالد العتيبي",
+    requesterNationalId: "1038472916",
+    requesterDob: "14 Mar 1988",
+    requesterPhone: "0551847263",
+    submittedAt: "28 Jul 2026, 9:14 AM",
+    processing: "Manual review",
+    status: "Pending review",
+    source: "Borrower Portal",
+    requestedFor: "شركة اسمنت الجوف",
+    permissions: [],
+    files: ["authorization-letter-0189.pdf"],
+    delegationDocument: null,
+    signedDocument: null,
+    completed: false,
+    managers: [],
+    audit: [
+      { id: "audit-189-1", event: "Authorization request submitted for Operations review", actor: "أحمد خالد العتيبي", at: "28 Jul 2026, 9:14 AM" },
+    ],
+  },
+  {
+    id: "PR-2026-0188",
+    type: "Delegation",
+    requestedBy: "سارة عبدالله الزهراني",
+    requesterNationalId: "1047281935",
+    requesterDob: "22 Sep 1991",
+    requesterPhone: "0557291846",
+    submittedAt: "27 Jul 2026, 11:36 AM",
+    processing: "Manual review",
+    status: "Pending review",
+    source: "Borrower Portal",
+    requestedFor: "شركة اسمنت الجوف",
+    permissions: ["Facility Contract", "Assignment of Proceeds"],
+    files: ["delegation-request-0188.pdf", "articles-of-association-0188.pdf"],
+    delegationDocument: "delegation-request-0188.pdf",
+    signedDocument: null,
+    completed: false,
+    managers: [
+      { id: "manager-8", name: "خالد محمد الشمري", nationalId: "1019283746", phone: "0559182734", signature: "Not requested", invitation: "Not sent", lastSms: "—" },
+      { id: "manager-9", name: "منى عبدالعزيز القحطاني", nationalId: "1028374651", phone: "0558273641", signature: "Not requested", invitation: "Not sent", lastSms: "—" },
+    ],
+    audit: [
+      { id: "audit-188-1", event: "Delegation request submitted for Operations review", actor: "سارة عبدالله الزهراني", at: "27 Jul 2026, 11:36 AM" },
+    ],
+  },
+  {
     id: "PR-2026-0187",
     type: "Delegation",
     requestedBy: "عيسى بسام فرح باعيسى",
+    requesterNationalId: "1008343939",
+    requesterDob: "24 Nov 1992",
+    requesterPhone: "0553637002",
     submittedAt: "26 Jul 2026, 2:18 PM",
     processing: "Manual review",
     status: "Awaiting signatures",
     source: "Borrower Portal",
     requestedFor: "شركة اسمنت الجوف",
     permissions: ["Facility Contract", "Company Promissory Note", "Assignment of Proceeds"],
+    files: ["delegation-request-0187.pdf"],
     delegationDocument: "delegation-request-0187.pdf",
     signedDocument: null,
     completed: false,
@@ -254,12 +305,16 @@ const permissionRequestsSeed = [
     id: "PR-2026-0186",
     type: "Delegation",
     requestedBy: "حامد سعيد حمدان الغامدي",
+    requesterNationalId: "1030929341",
+    requesterDob: "1 Jul 1991",
+    requesterPhone: "0555781730",
     submittedAt: "24 Jul 2026, 10:04 AM",
     processing: "Automatic",
     status: "Completed",
     source: "Borrower Portal",
     requestedFor: "شركة اسمنت الجوف",
     permissions: ["Facility Contract", "Non-Objection Letter"],
+    files: ["delegation-request-0186.pdf"],
     delegationDocument: "delegation-request-0186.pdf",
     signedDocument: "signed-delegation-0186.pdf",
     completed: true,
@@ -275,14 +330,18 @@ const permissionRequestsSeed = [
   },
   {
     id: "PR-2026-0185",
-    type: "Permission assignment",
+    type: "Authorization",
     requestedBy: "تركي عبدالله الزهراني",
+    requesterNationalId: "1041316504",
+    requesterDob: "1 Jul 1983",
+    requesterPhone: "0500045698",
     submittedAt: "21 Jul 2026, 9:38 AM",
     processing: "Manual review",
     status: "Approved",
     source: "Admin Portal",
     requestedFor: "شركة اسمنت الجوف",
     permissions: ["Company Promissory Note"],
+    files: ["authorization-letter-0185.pdf"],
     delegationDocument: null,
     signedDocument: null,
     completed: true,
@@ -296,14 +355,19 @@ const permissionRequestsSeed = [
     id: "PR-2026-0184",
     type: "Delegation",
     requestedBy: "سلطان أحمد الحربي",
+    requesterNationalId: "1034611333",
+    requesterDob: "18 Dec 1987",
+    requesterPhone: "0553182094",
     submittedAt: "18 Jul 2026, 3:12 PM",
     processing: "Manual review",
     status: "Rejected",
     source: "Borrower Portal",
     requestedFor: "شركة اسمنت الجوف",
     permissions: ["Facility Contract"],
+    files: ["delegation-request-0184.pdf"],
     delegationDocument: "delegation-request-0184.pdf",
     signedDocument: null,
+    rejectionReason: "The delegation document is incomplete.",
     completed: true,
     managers: [
       { id: "manager-6", name: "فيصل ناصر المطيري", nationalId: "1023948175", phone: "0551392074", signature: "Not requested", invitation: "Not sent", lastSms: "—" },
@@ -317,12 +381,16 @@ const permissionRequestsSeed = [
     id: "PR-2026-0183",
     type: "Delegation",
     requestedBy: "نايف محمد الدوسري",
+    requesterNationalId: "1025036128",
+    requesterDob: "6 Feb 1989",
+    requesterPhone: "0556419028",
     submittedAt: "15 Jul 2026, 11:26 AM",
     processing: "Automatic",
     status: "Completed",
     source: "Borrower Portal",
     requestedFor: "شركة اسمنت الجوف",
     permissions: ["Assignment of Proceeds"],
+    files: ["delegation-request-0183.pdf"],
     delegationDocument: "delegation-request-0183.pdf",
     signedDocument: "signed-delegation-0183.pdf",
     completed: true,
@@ -343,10 +411,19 @@ function Badge({ tone = "neutral", children }) {
 function statusTone(status) {
   if (["Successful", "Signed", "Completed", "Approved", "Active"].includes(status)) return "success";
   if (["Expired", "Rejected", "Failed"].includes(status)) return "danger";
-  if (["Pending", "Awaiting signatures"].includes(status)) return "warning";
+  if (["Pending", "Pending review", "Awaiting signatures"].includes(status)) return "warning";
   if (status === "Automatic") return "purple";
   return "neutral";
 }
+
+const configurablePermissions = [
+  "Facility Contract",
+  "Company Promissory Note",
+  "Assignment of Proceeds",
+  "Non-Objection Letter",
+  "View Financing",
+  "Upload Documents",
+];
 
 function resetMainHorizontalScroll() {
   const scrollContainer = document.querySelector(".content-scroll");
@@ -715,18 +792,19 @@ export function OwnershipManagement({ onNotify }) {
   );
 }
 
-function DocumentPreviewModal({ filename, signed, onClose, onDownload }) {
+function DocumentPreviewModal({ filename, signed, requestType, onClose, onDownload }) {
+  const documentTitle = signed ? "Signed delegation document" : `${requestType} document`;
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
       <section className="enhancement-modal document-preview-modal" role="dialog" aria-modal="true" aria-labelledby="document-preview-title">
         <div className="modal-header">
-          <div><span className="modal-eyebrow">PERMISSION REQUEST DOCUMENT</span><h2 id="document-preview-title">{signed ? "Signed delegation document" : "Delegation document"}</h2></div>
+          <div><span className="modal-eyebrow">PERMISSION REQUEST DOCUMENT</span><h2 id="document-preview-title">{documentTitle}</h2></div>
           <button type="button" onClick={onClose} aria-label="Close">×</button>
         </div>
         <div className="document-preview-body">
           <div className="document-page">
             <img src={`${import.meta.env.BASE_URL}assets/manafa-logo.svg`} alt="Manafa" />
-            <h3>{signed ? "Signed Delegation Agreement" : "Delegation Request"}</h3>
+            <h3>{signed ? "Signed Delegation Agreement" : `${requestType} Request`}</h3>
             <p>This preview represents the document stored with the permission request.</p>
             <dl>
               <div><dt>Company</dt><dd>شركة اسمنت الجوف</dd></div>
@@ -739,6 +817,118 @@ function DocumentPreviewModal({ filename, signed, onClose, onDownload }) {
           <button className="secondary-button" type="button" onClick={onClose}>Close</button>
           <button className="primary-button primary-button--strong" type="button" onClick={() => onDownload(filename)}><DownloadIcon label="" size="small" />Download</button>
         </div>
+      </section>
+    </div>
+  );
+}
+
+function RequestDecisionModal({ request, mode, onClose, onApprove, onReject }) {
+  const [selectedPermissions, setSelectedPermissions] = useState(request.permissions);
+  const [selectedManagers, setSelectedManagers] = useState([]);
+  const [rejectionReason, setRejectionReason] = useState("");
+  const [error, setError] = useState("");
+  const isApproval = mode === "approve";
+
+  function togglePermission(permission) {
+    setSelectedPermissions((current) => (
+      current.includes(permission)
+        ? current.filter((item) => item !== permission)
+        : [...current, permission]
+    ));
+    setError("");
+  }
+
+  function toggleManager(managerId) {
+    setSelectedManagers((current) => (
+      current.includes(managerId)
+        ? current.filter((item) => item !== managerId)
+        : [...current, managerId]
+    ));
+    setError("");
+  }
+
+  function submitDecision(event) {
+    event.preventDefault();
+    if (!isApproval && !rejectionReason.trim()) {
+      setError("A rejection reason is required and will be shared with the borrower.");
+      return;
+    }
+    if (isApproval && request.type === "Authorization" && !selectedPermissions.length) {
+      setError("Select at least one permission before approving this request.");
+      return;
+    }
+    if (isApproval && request.type === "Delegation" && !selectedManagers.length) {
+      setError("Select at least one manager before approving this delegation.");
+      return;
+    }
+
+    if (isApproval) {
+      onApprove({
+        permissions: selectedPermissions,
+        managerIds: selectedManagers,
+      });
+      return;
+    }
+    onReject(rejectionReason.trim());
+  }
+
+  return (
+    <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
+      <section className="enhancement-modal request-decision-modal" role="dialog" aria-modal="true" aria-labelledby="request-decision-title">
+        <form onSubmit={submitDecision}>
+          <div className="modal-header">
+            <div>
+              <span className="modal-eyebrow">{request.id}</span>
+              <h2 id="request-decision-title">{isApproval ? `Approve ${request.type} request` : `Reject ${request.type} request`}</h2>
+            </div>
+            <button type="button" onClick={onClose} aria-label="Close">×</button>
+          </div>
+          <div className="enhancement-modal-body request-decision-body">
+            {isApproval && request.type === "Authorization" ? (
+              <>
+                <p className="decision-help">Configure the permissions that will be granted to the requester. At least one permission is required.</p>
+                <fieldset className="decision-options">
+                  <legend>Permission configuration</legend>
+                  {configurablePermissions.map((permission) => (
+                    <label key={permission}>
+                      <input type="checkbox" checked={selectedPermissions.includes(permission)} onChange={() => togglePermission(permission)} />
+                      <span>{permission}</span>
+                    </label>
+                  ))}
+                </fieldset>
+              </>
+            ) : null}
+            {isApproval && request.type === "Delegation" ? (
+              <>
+                <p className="decision-help">Select the manager or managers who must sign. Invitations are sent after approval.</p>
+                <fieldset className="decision-options decision-manager-options">
+                  <legend>Delegators</legend>
+                  {request.managers.map((manager) => (
+                    <label key={manager.id}>
+                      <input type="checkbox" checked={selectedManagers.includes(manager.id)} onChange={() => toggleManager(manager.id)} />
+                      <span lang="ar" dir="rtl">{manager.name}</span>
+                      <small>{manager.nationalId} · {manager.phone}</small>
+                    </label>
+                  ))}
+                </fieldset>
+              </>
+            ) : null}
+            {!isApproval ? (
+              <label className="rejection-reason-field">
+                <span>Rejection reason <b aria-hidden="true">*</b></span>
+                <textarea value={rejectionReason} onChange={(event) => { setRejectionReason(event.target.value); setError(""); }} rows="5" placeholder="Explain why the request is being rejected" />
+                <small>This reason will be visible to the borrower.</small>
+              </label>
+            ) : null}
+            {error ? <div className="decision-error" role="alert"><WarningIcon label="" size="small" />{error}</div> : null}
+          </div>
+          <div className="modal-footer">
+            <button className="secondary-button" type="button" onClick={onClose}>Cancel</button>
+            <button className={isApproval ? "primary-button primary-button--strong" : "danger-button"} type="submit">
+              {isApproval ? "Confirm approval" : "Reject request"}
+            </button>
+          </div>
+        </form>
       </section>
     </div>
   );
@@ -765,7 +955,7 @@ function PermissionRequestList({ requests, onOpenRequest }) {
       </div>
       <div className="request-filters">
         <label className="request-search"><SearchIcon label="" size="small" /><input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search request ID, user, or type" aria-label="Search permission requests" /></label>
-        <label><span className="sr-only">Filter by status</span><select value={status} onChange={(event) => setStatus(event.target.value)} aria-label="Filter permission requests by status"><option>All statuses</option><option>Awaiting signatures</option><option>Completed</option><option>Approved</option><option>Rejected</option></select></label>
+        <label><span className="sr-only">Filter by status</span><select value={status} onChange={(event) => setStatus(event.target.value)} aria-label="Filter permission requests by status"><option>All statuses</option><option>Pending review</option><option>Awaiting signatures</option><option>Completed</option><option>Approved</option><option>Rejected</option><option>Expired</option></select></label>
         <label><span className="sr-only">Filter by processing</span><select value={processing} onChange={(event) => setProcessing(event.target.value)} aria-label="Filter permission requests by processing"><option>All processing</option><option>Manual review</option><option>Automatic</option></select></label>
       </div>
       <div className="request-summary">
@@ -801,7 +991,12 @@ function PermissionRequestList({ requests, onOpenRequest }) {
   );
 }
 
-function RequestDetails({ request, onBack, onResendSms, onOpenDocument }) {
+function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onDecision }) {
+  const canReview = !request.completed
+    && request.processing === "Manual review"
+    && ["Pending review", "Expired"].includes(request.status);
+  const requestFiles = request.files || (request.delegationDocument ? [request.delegationDocument] : []);
+
   return (
     <div className="request-detail-view">
       <button className="back-link-button" type="button" onClick={onBack}><ArrowLeftIcon label="" size="small" />Back to permission requests</button>
@@ -821,48 +1016,83 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument }) {
         <div className="readonly-banner"><LockIcon label="" /><div><strong>Completed request · read-only</strong><span>Historical request details remain available, but no further changes can be made.</span></div></div>
       ) : null}
 
+      {canReview ? (
+        <div className="request-decision-bar">
+          <div>
+            <strong>Operations review required</strong>
+            <span>Review the requester information and documents before accepting or rejecting this request.</span>
+          </div>
+          <div>
+            <button className="danger-ghost-button" type="button" onClick={() => onDecision("reject")}>Reject</button>
+            <button className="primary-button request-approve-button" type="button" onClick={() => onDecision("approve")}>Approve</button>
+          </div>
+        </div>
+      ) : null}
+
       <div className="request-detail-grid">
         <section className="request-detail-card">
           <div className="detail-card-title"><h3>Request details</h3></div>
           <dl className="enhancement-detail-grid">
             <div><dt>Request type</dt><dd>{request.type}</dd></div>
-            <div><dt>Request source</dt><dd>{request.source}</dd></div>
-            <div><dt>Requested by</dt><dd lang="ar" dir="rtl">{request.requestedBy}</dd></div>
-            <div><dt>Company</dt><dd lang="ar" dir="rtl">{request.requestedFor}</dd></div>
-            <div><dt>Processing</dt><dd>{request.processing}</dd></div>
             <div><dt>Current status</dt><dd>{request.status}</dd></div>
+            <div><dt>Requested by</dt><dd lang="ar" dir="rtl">{request.requestedBy}</dd></div>
+            <div><dt>National ID / Iqama</dt><dd className="ownership-number">{request.requesterNationalId}</dd></div>
+            <div><dt>Date of birth</dt><dd>{request.requesterDob}</dd></div>
+            <div><dt>Mobile number</dt><dd className="ownership-number">{request.requesterPhone}</dd></div>
+            <div><dt>Request source</dt><dd>{request.source}</dd></div>
+            <div><dt>Processing</dt><dd>{request.processing}</dd></div>
+            <div><dt>Company</dt><dd lang="ar" dir="rtl">{request.requestedFor}</dd></div>
+            <div><dt>Submitted</dt><dd>{request.submittedAt}</dd></div>
           </dl>
         </section>
         <section className="request-detail-card">
-          <div className="detail-card-title"><h3>Requested permissions</h3><span>{request.permissions.length} selected</span></div>
-          <ul className="requested-permissions">
-            {request.permissions.map((permission) => <li key={permission}><CheckCircleIcon label="" size="small" /><span>{permission}</span></li>)}
-          </ul>
+          <div className="detail-card-title"><h3>{request.status === "Pending review" && request.type === "Authorization" ? "Permission configuration" : "Requested permissions"}</h3><span>{request.permissions.length} selected</span></div>
+          {request.permissions.length ? (
+            <ul className="requested-permissions">
+              {request.permissions.map((permission) => <li key={permission}><CheckCircleIcon label="" size="small" /><span>{permission}</span></li>)}
+            </ul>
+          ) : (
+            <div className="requested-permissions-empty">
+              <LockIcon label="" size="small" />
+              <span>Permissions will be configured by Operations during approval.</span>
+            </div>
+          )}
         </section>
       </div>
 
-      {request.type === "Delegation" ? (
-        <>
-          <section className="request-detail-card request-documents-card">
-            <div className="detail-card-title"><h3>Delegation documents</h3></div>
-            <div className="document-row">
-              <div><strong>Delegation request document</strong><span>{request.delegationDocument}</span></div>
-              <button className="secondary-action-button" type="button" onClick={() => onOpenDocument({ filename: request.delegationDocument, signed: false })}><EyeOpenIcon label="" size="small" />View</button>
-            </div>
-            <div className="document-row">
+      <section className="request-detail-card request-documents-card">
+        <div className="detail-card-title"><h3>Request documents</h3><span>{requestFiles.length} attached</span></div>
+        {requestFiles.map((filename) => (
+          <div className="document-row" key={filename}>
+            <div><strong>Supporting document</strong><span>{filename}</span></div>
+            <button className="secondary-action-button" type="button" onClick={() => onOpenDocument({ filename, signed: false, requestType: request.type })}><EyeOpenIcon label="" size="small" />View</button>
+          </div>
+        ))}
+        {request.type === "Delegation" ? (
+          <div className="document-row">
               <div><strong>Signed delegation document</strong><span>{request.signedDocument || "Available after every selected manager signs"}</span></div>
-              {request.signedDocument ? <button className="secondary-action-button" type="button" onClick={() => onOpenDocument({ filename: request.signedDocument, signed: true })}><EyeOpenIcon label="" size="small" />View signed document</button> : <Badge tone="neutral">Not available</Badge>}
-            </div>
-          </section>
+              {request.signedDocument ? <button className="secondary-action-button" type="button" onClick={() => onOpenDocument({ filename: request.signedDocument, signed: true, requestType: request.type })}><EyeOpenIcon label="" size="small" />View signed document</button> : <Badge tone="neutral">Not available</Badge>}
+          </div>
+        ) : null}
+      </section>
 
+      {request.rejectionReason ? (
+        <section className="request-detail-card rejection-detail-card">
+          <div className="detail-card-title"><h3>Rejection reason</h3><span>Visible to borrower</span></div>
+          <p>{request.rejectionReason}</p>
+        </section>
+      ) : null}
+
+      {request.type === "Delegation" && request.managers.length ? (
+        <>
           <section className="request-detail-card managers-card">
-            <div className="detail-card-title"><div><h3>Selected managers</h3><span>Signature and invitation status</span></div><span>{request.managers.filter((manager) => manager.signature === "Signed").length} of {request.managers.length} signed</span></div>
+            <div className="detail-card-title"><div><h3>{request.status === "Pending review" ? "Proposed managers" : "Selected managers"}</h3><span>Signature and invitation status</span></div><span>{request.managers.filter((manager) => manager.signature === "Signed").length} of {request.managers.length} signed</span></div>
             <div className="table-shell enhancement-table-shell manager-table-shell">
               <table className="users-table enhancement-table managers-table">
                 <thead><tr><th>Manager</th><th>National ID</th><th>Mobile Number</th><th>Signature Status</th><th>Invitation</th><th>Last SMS</th><th>Actions</th></tr></thead>
                 <tbody>
                   {request.managers.map((manager) => {
-                    const canResend = !request.completed && ["Pending", "Expired"].includes(manager.invitation);
+                    const canResend = !request.completed && !manager.resendLocked && ["Pending", "Expired"].includes(manager.invitation);
                     return (
                       <tr key={manager.id}>
                         <td className="arabic-requester" lang="ar" dir="rtl">{manager.name}</td>
@@ -871,7 +1101,11 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument }) {
                         <td><Badge tone={statusTone(manager.signature)}>{manager.signature}</Badge></td>
                         <td><Badge tone={statusTone(manager.invitation)}>{manager.invitation}</Badge></td>
                         <td>{manager.lastSms}</td>
-                        <td>{canResend ? <button className="table-action-button table-action-button--compact" type="button" onClick={() => onResendSms(manager.id)}><RefreshIcon label="" size="small" />Resend SMS</button> : <span className="cell-secondary">No action</span>}</td>
+                        <td>
+                          {canResend ? <button className="table-action-button table-action-button--compact" type="button" onClick={() => onResendSms(manager.id)}><RefreshIcon label="" size="small" />Resend SMS</button> : null}
+                          {!canResend && manager.resendLocked ? <Badge tone="neutral">SMS sent</Badge> : null}
+                          {!canResend && !manager.resendLocked ? <span className="cell-secondary">No action</span> : null}
+                        </td>
                       </tr>
                     );
                   })}
@@ -894,34 +1128,54 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument }) {
   );
 }
 
-export function PermissionRequests({ onNotify }) {
+export function PermissionRequests({ onNotify, onStatsChange }) {
   const [requests, setRequests] = useState(permissionRequestsSeed);
   const [selectedRequestId, setSelectedRequestId] = useState("");
   const [documentPreview, setDocumentPreview] = useState(null);
+  const [decisionMode, setDecisionMode] = useState("");
   const selectedRequest = requests.find((request) => request.id === selectedRequestId);
+
+  useEffect(() => {
+    onStatsChange?.({
+      total: requests.length,
+      active: requests.filter((request) => !request.completed).length,
+      historical: requests.filter((request) => request.completed).length,
+    });
+  }, [onStatsChange, requests]);
 
   function openRequest(requestId) {
     setSelectedRequestId(requestId);
+    setDecisionMode("");
     resetMainHorizontalScroll();
   }
 
   function closeRequest() {
     setSelectedRequestId("");
+    setDecisionMode("");
     resetMainHorizontalScroll();
   }
 
   function resendSms(managerId) {
     if (!selectedRequest || selectedRequest.completed) return;
-    let managerName = "";
+    const selectedManager = selectedRequest.managers.find((manager) => manager.id === managerId);
+    const canResend = selectedManager
+      && !selectedManager.resendLocked
+      && ["Pending", "Expired"].includes(selectedManager.invitation);
+    if (!canResend) return;
+    const managerName = selectedManager.name;
+
     setRequests((current) => current.map((request) => {
       if (request.id !== selectedRequest.id) return request;
-      const manager = request.managers.find((item) => item.id === managerId);
-      managerName = manager?.name || "Manager";
       return {
         ...request,
-        managers: request.managers.map((item) => item.id === managerId ? { ...item, invitation: "Pending", lastSms: "Just now" } : item),
+        managers: request.managers.map((item) => item.id === managerId ? {
+          ...item,
+          invitation: "Pending",
+          lastSms: "Just now",
+          resendLocked: true,
+        } : item),
         audit: [
-          { id: `audit-${request.id}-${Date.now()}`, event: `SMS invitation resent to ${managerName}`, actor: "Norah · Operations", at: "27 Jul 2026, 12:22 PM" },
+          { id: `audit-${request.id}-${Date.now()}`, event: `SMS invitation resent to ${managerName}`, actor: "Norah · Operations", at: "28 Jul 2026, 11:30 AM" },
           ...request.audit,
         ],
       };
@@ -929,12 +1183,91 @@ export function PermissionRequests({ onNotify }) {
     onNotify(`SMS invitation resent to ${managerName}`);
   }
 
+  function approveRequest({ permissions, managerIds }) {
+    if (!selectedRequest) return;
+    setRequests((current) => current.map((request) => {
+      if (request.id !== selectedRequest.id) return request;
+
+      if (request.type === "Authorization") {
+        return {
+          ...request,
+          permissions,
+          status: "Approved",
+          completed: true,
+          audit: [
+            { id: `audit-${request.id}-${Date.now()}`, event: `Authorization approved with ${permissions.length} configured permissions`, actor: "Norah · Operations", at: "28 Jul 2026, 11:30 AM" },
+            ...request.audit,
+          ],
+        };
+      }
+
+      const selectedManagers = request.managers
+        .filter((manager) => managerIds.includes(manager.id))
+        .map((manager) => ({
+          ...manager,
+          signature: "Pending",
+          invitation: "Pending",
+          lastSms: "Just now",
+          resendLocked: true,
+        }));
+
+      return {
+        ...request,
+        status: "Awaiting signatures",
+        managers: selectedManagers,
+        audit: [
+          { id: `audit-${request.id}-${Date.now()}`, event: `Delegation approved and SMS invitations sent to ${selectedManagers.length} selected manager${selectedManagers.length === 1 ? "" : "s"}`, actor: "Norah · Operations", at: "28 Jul 2026, 11:30 AM" },
+          ...request.audit,
+        ],
+      };
+    }));
+    setDecisionMode("");
+    onNotify(selectedRequest.type === "Authorization" ? "Authorization request approved" : "Delegation request approved and manager invitations sent");
+    resetMainHorizontalScroll();
+  }
+
+  function rejectRequest(reason) {
+    if (!selectedRequest) return;
+    setRequests((current) => current.map((request) => (
+      request.id === selectedRequest.id
+        ? {
+          ...request,
+          status: "Rejected",
+          completed: true,
+          rejectionReason: reason,
+          audit: [
+            { id: `audit-${request.id}-${Date.now()}`, event: `Request rejected · ${reason}`, actor: "Norah · Operations", at: "28 Jul 2026, 11:30 AM" },
+            ...request.audit,
+          ],
+        }
+        : request
+    )));
+    setDecisionMode("");
+    onNotify("Permission request rejected and the borrower was notified");
+    resetMainHorizontalScroll();
+  }
+
   return (
     <div className="enhancement-view permission-requests-view">
       {selectedRequest ? (
-        <RequestDetails request={selectedRequest} onBack={closeRequest} onResendSms={resendSms} onOpenDocument={setDocumentPreview} />
+        <RequestDetails
+          request={selectedRequest}
+          onBack={closeRequest}
+          onResendSms={resendSms}
+          onOpenDocument={setDocumentPreview}
+          onDecision={setDecisionMode}
+        />
       ) : <PermissionRequestList requests={requests} onOpenRequest={openRequest} />}
       {documentPreview ? <DocumentPreviewModal {...documentPreview} onClose={() => setDocumentPreview(null)} onDownload={(filename) => onNotify(`${filename} is ready to download in the production integration`)} /> : null}
+      {selectedRequest && decisionMode ? (
+        <RequestDecisionModal
+          request={selectedRequest}
+          mode={decisionMode}
+          onClose={() => setDecisionMode("")}
+          onApprove={approveRequest}
+          onReject={rejectRequest}
+        />
+      ) : null}
     </div>
   );
 }
