@@ -5,11 +5,7 @@ import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import DownloadIcon from "@atlaskit/icon/core/download";
 import EyeOpenIcon from "@atlaskit/icon/core/eye-open";
 import LockIcon from "@atlaskit/icon/core/lock-locked";
-import OfficeBuildingIcon from "@atlaskit/icon/core/office-building";
-import PersonIcon from "@atlaskit/icon/core/person";
-import RedoIcon from "@atlaskit/icon/core/redo";
 import RefreshIcon from "@atlaskit/icon/core/refresh";
-import TreeIcon from "@atlaskit/icon/core/tree";
 import WarningIcon from "@atlaskit/icon/core/warning";
 
 const MAIN_COMPANY_ID = "1010225259";
@@ -658,8 +654,6 @@ function OwnershipTreeNode({
   retrievalState,
   snapshots,
   stakeholderById,
-  onRefreshMain,
-  mainCallInProgress,
 }) {
   const children = childrenByParent.get(node.id) || [];
   const hasChildren = children.length > 0;
@@ -669,21 +663,8 @@ function OwnershipTreeNode({
   const canRetrieveOwnership = !node.isRoot
     && node.stakeholderType === "Company"
     && VALID_UNIFIED_NUMBER_PATTERN.test(node.id);
-  const shouldRetrieve = canRetrieveOwnership && !node.childrenLoaded && !hasChildren;
   const parent = node.parentId ? stakeholderById.get(node.parentId) : null;
   const profileStakeholder = createProfileStakeholder(node, parent, snapshots);
-  const levelLabel = node.isRoot
-    ? "Current company"
-    : depth === 1
-      ? "Level 1 · Direct"
-      : `Level ${depth} · Indirect`;
-  const ownershipActionLabel = isRetrieving
-    ? "Retrieving ownership from Wathq"
-    : isCoolingDown
-      ? "Ownership refresh cooldown active for 10 minutes"
-      : shouldRetrieve
-        ? `Retrieve ownership from Wathq for ${node.name}`
-        : `Refresh ownership from Wathq for ${node.name}`;
 
   return (
     <li
@@ -694,7 +675,7 @@ function OwnershipTreeNode({
       style={{ "--ownership-indent": `${depth * 18}px` }}
     >
       <div className="ownership-tree-row">
-        <div className="ownership-tree-identity-cell">
+        <span className="ownership-tree-leading">
           {hasChildren ? (
             <button
               className="ownership-tree-toggle"
@@ -706,46 +687,32 @@ function OwnershipTreeNode({
               {isExpanded ? <ChevronDownIcon label="" size="small" /> : <ChevronRightIcon label="" size="small" />}
             </button>
           ) : <span className="ownership-tree-toggle-placeholder" aria-hidden="true" />}
-          <span className={`ownership-tree-entity-icon ownership-tree-entity-icon--${node.stakeholderType.toLowerCase()}`} aria-hidden="true">
-            {node.stakeholderType === "Company" ? <OfficeBuildingIcon label="" size="small" /> : <PersonIcon label="" size="small" />}
-          </span>
-          <span className="ownership-tree-identity">
-            <button className="ownership-tree-name" type="button" onClick={() => onOpenProfile(profileStakeholder)} lang="ar" dir="rtl">
-              {node.name}
-            </button>
-            <span className="ownership-tree-node-meta">
-              <Badge tone={node.stakeholderType === "Company" ? "purple" : "blue"}>{node.stakeholderType}</Badge>
-              <span>{node.role} · {node.designation}</span>
-            </span>
-          </span>
-        </div>
-        <div className="ownership-tree-data"><span>ID / Unified Number</span><strong>{node.id}</strong></div>
-        <div className="ownership-tree-data"><span>Ownership</span><strong>{node.ownership == null ? "—" : `${node.ownership}%`}</strong></div>
-        <div className="ownership-tree-data">
-          <span>Ownership level</span>
-          <Badge tone={node.isRoot ? "blue" : depth === 1 ? "success" : "warning"}>{levelLabel}</Badge>
-        </div>
-        <div className={`ownership-tree-data${profileStakeholder.lastRetrieved === "Not retrieved" ? " is-empty" : ""}`}>
-          <span>Last Wathq retrieval</span>
-          <strong>{profileStakeholder.lastRetrieved}</strong>
-          {isRetrieving ? <small>Retrieval in progress…</small> : null}
-          {isCoolingDown ? <small>Cooldown active · 10 min</small> : null}
-        </div>
-        <div className="ownership-tree-actions">
-          <button className="table-icon-action" type="button" onClick={() => onOpenProfile(profileStakeholder)} aria-label={`View profile for ${node.name}`} title="View profile">
-            <EyeOpenIcon label="" size="small" />
+        </span>
+        <button
+          className="ownership-tree-name"
+          type="button"
+          onClick={() => onOpenProfile(profileStakeholder)}
+          lang="ar"
+          dir="rtl"
+        >
+          {node.name}
+        </button>
+        {!node.isRoot ? (
+          <strong className="ownership-tree-percentage">
+            {node.ownership == null ? "—" : `${node.ownership}%`}
+          </strong>
+        ) : <span className="ownership-tree-root-label">Current company</span>}
+        {canRetrieveOwnership ? (
+          <button
+            className="secondary-action-button ownership-tree-retrieve"
+            type="button"
+            onClick={() => onRetrieve(node)}
+            disabled={isRetrieving || isCoolingDown}
+          >
+            <RefreshIcon label="" size="small" />
+            {isRetrieving ? "Retrieving…" : isCoolingDown ? "Cooldown active" : "Retrieve Ownership"}
           </button>
-          {node.isRoot ? (
-            <button className="table-icon-action" type="button" onClick={onRefreshMain} disabled={mainCallInProgress} aria-label="Refresh main company ownership from Wathq" title="Refresh ownership from Wathq">
-              <RedoIcon label="" size="small" />
-            </button>
-          ) : null}
-          {canRetrieveOwnership ? (
-            <button className="table-icon-action" type="button" onClick={() => onRetrieve(node)} disabled={isRetrieving || isCoolingDown} aria-label={ownershipActionLabel} title={ownershipActionLabel}>
-              <RedoIcon label="" size="small" />
-            </button>
-          ) : null}
-        </div>
+        ) : <span className="ownership-tree-action-placeholder" aria-hidden="true" />}
       </div>
       {hasChildren && isExpanded ? (
         <ul className="ownership-tree-children" role="group">
@@ -762,8 +729,6 @@ function OwnershipTreeNode({
               retrievalState={retrievalState}
               snapshots={snapshots}
               stakeholderById={stakeholderById}
-              onRefreshMain={onRefreshMain}
-              mainCallInProgress={mainCallInProgress}
             />
           ))}
         </ul>
@@ -778,8 +743,6 @@ function OwnershipHierarchy({
   onOpenProfile,
   onRetrieve,
   retrievalState,
-  onRefreshMain,
-  mainCallInProgress,
 }) {
   const owners = useMemo(
     () => stakeholders.filter((stakeholder) => stakeholder.role === "Owner"),
@@ -828,50 +791,31 @@ function OwnershipHierarchy({
     });
   }
 
-  function expandAll() {
-    setExpandedIds(new Set(
-      [MAIN_COMPANY_ID, ...owners.map((owner) => owner.id)]
-        .filter((ownerId) => (childrenByParent.get(ownerId) || []).length > 0),
-    ));
-  }
-
   return (
     <section className="ownership-hierarchy-section" aria-labelledby="ownership-hierarchy-heading">
       <div className="ownership-panel-heading">
         <div>
-          <span className="ownership-panel-icon" aria-hidden="true"><TreeIcon label="" /></span>
           <div>
             <h3 id="ownership-hierarchy-heading">Ownership Hierarchy</h3>
-            <p>Expand each corporate owner to review direct and indirect ownership levels.</p>
+            <p>Owners are shown beneath the company they own. Corporate owners can be retrieved from Wathq.</p>
           </div>
-        </div>
-        <div className="ownership-tree-toolbar">
-          <button type="button" onClick={expandAll}>Expand all</button>
-          <button type="button" onClick={() => setExpandedIds(new Set())}>Collapse all</button>
         </div>
       </div>
       <div className="ownership-tree-shell">
-        <div className="ownership-tree-board">
-          <div className="ownership-tree-column-head" aria-hidden="true">
-            <span>Owner / company</span><span>ID / Unified Number</span><span>Ownership</span><span>Ownership level</span><span>Last Wathq retrieval</span><span>Actions</span>
-          </div>
-          <ul className="ownership-tree-list" role="tree" aria-label="Company ownership hierarchy">
-            <OwnershipTreeNode
-              node={mainCompanyStakeholder}
-              depth={0}
-              childrenByParent={childrenByParent}
-              expandedIds={expandedIds}
-              onToggle={toggleNode}
-              onOpenProfile={onOpenProfile}
-              onRetrieve={onRetrieve}
-              retrievalState={retrievalState}
-              snapshots={snapshots}
-              stakeholderById={stakeholderById}
-              onRefreshMain={onRefreshMain}
-              mainCallInProgress={mainCallInProgress}
-            />
-          </ul>
-        </div>
+        <ul className="ownership-tree-list" role="tree" aria-label="Company ownership hierarchy">
+          <OwnershipTreeNode
+            node={mainCompanyStakeholder}
+            depth={0}
+            childrenByParent={childrenByParent}
+            expandedIds={expandedIds}
+            onToggle={toggleNode}
+            onOpenProfile={onOpenProfile}
+            onRetrieve={onRetrieve}
+            retrievalState={retrievalState}
+            snapshots={snapshots}
+            stakeholderById={stakeholderById}
+          />
+        </ul>
       </div>
     </section>
   );
@@ -911,82 +855,55 @@ function OwnershipCurrentView({
         </div>
       ) : null}
 
-      <OwnershipHierarchy
-        stakeholders={stakeholders}
-        snapshots={snapshots}
-        onOpenProfile={onOpenProfile}
-        onRetrieve={onRetrieve}
-        retrievalState={retrievalState}
-        onRefreshMain={onRefreshMain}
-        mainCallInProgress={mainCallInProgress}
-      />
-
       <div className="ownership-table-heading">
         <h3>Owners &amp; Executives</h3>
-        <p>Read-only stakeholder information returned by the latest successful Wathq response.</p>
       </div>
       <div className="table-shell enhancement-table-shell">
         <table className="users-table enhancement-table ownership-management-table">
           <colgroup>
             <col className="uc-owner-col-name" />
             <col className="uc-owner-col-id" />
-            <col className="uc-owner-col-type" />
             <col className="uc-owner-col-role" />
             <col className="uc-owner-col-percentage" />
-            <col className="uc-owner-col-level" />
-            <col className="uc-owner-col-through" />
-            <col className="uc-owner-col-action" />
           </colgroup>
           <thead>
             <tr>
-              <th>Name</th><th>ID / Unified Number</th><th>Type</th><th>Role / Designation</th><th>Ownership %</th><th>Ownership Level</th><th>Ownership Through</th><th>Actions</th>
+              <th>Name</th><th>ID</th><th>Role</th><th>Ownership Percentage</th>
             </tr>
           </thead>
           <tbody>
             {stakeholders.map((row) => {
-              const childCount = stakeholders.filter((candidate) => candidate.parentId === row.id).length;
-              const isRetrieving = retrievalState[row.id] === "inProgress";
-              const isCoolingDown = retrievalState[row.id] === "cooldown";
-              const hasValidUnifiedNumber = VALID_UNIFIED_NUMBER_PATTERN.test(row.id);
               const parentOwner = row.parentId ? stakeholderById.get(row.parentId) : null;
-              const canRetrieveOwnership = row.stakeholderType === "Company" && hasValidUnifiedNumber;
-              const shouldRetrieve = canRetrieveOwnership && !row.childrenLoaded && !childCount;
-              const ownershipActionLabel = isRetrieving
-                ? "Retrieving ownership from Wathq"
-                : isCoolingDown
-                  ? "Ownership refresh cooldown active for 10 minutes"
-                  : shouldRetrieve
-                    ? `Retrieve ownership from Wathq for ${row.name}`
-                    : `Refresh ownership from Wathq for ${row.name}`;
               return (
-                <tr key={row.key} className={row.parentId ? "is-indirect-row" : ""}>
+                <tr key={row.key}>
                   <td className="ownership-profile-cell">
-                    <span className="stakeholder-name" lang="ar" dir="rtl">{row.name}</span>
+                    <button
+                      className="stakeholder-link"
+                      type="button"
+                      onClick={() => onOpenProfile(createProfileStakeholder(row, parentOwner, snapshots))}
+                      lang="ar"
+                      dir="rtl"
+                    >
+                      {row.name}
+                    </button>
                   </td>
                   <td className="ownership-number">{row.id}</td>
-                  <td><Badge tone={row.stakeholderType === "Company" ? "purple" : "blue"}>{row.stakeholderType}</Badge></td>
-                  <td><strong className="role-name">{row.role}</strong><span className="cell-secondary">{row.designation}</span></td>
+                  <td><strong className="role-name">{row.role}</strong></td>
                   <td className="ownership-number">{row.ownership == null ? "—" : `${row.ownership}%`}</td>
-                  <td><Badge tone={row.level === "Direct" ? "success" : "warning"}>{row.level}</Badge></td>
-                  <td className={parentOwner ? "ownership-through-cell" : "ownership-through-empty"} lang={parentOwner ? "ar" : undefined} dir={parentOwner ? "rtl" : undefined}>
-                    {parentOwner?.name || "—"}
-                  </td>
-                  <td className="table-icon-actions">
-                    <button className="table-icon-action" type="button" onClick={() => onOpenProfile(createProfileStakeholder(row, parentOwner, snapshots))} aria-label={`View profile for ${row.name}`} title="View profile">
-                      <EyeOpenIcon label="" size="small" />
-                    </button>
-                    {canRetrieveOwnership ? (
-                      <button className="table-icon-action" type="button" onClick={() => onRetrieve(row)} disabled={isRetrieving || isCoolingDown} aria-label={ownershipActionLabel} title={ownershipActionLabel}>
-                        <RedoIcon label="" size="small" />
-                      </button>
-                    ) : null}
-                  </td>
                 </tr>
               );
             })}
           </tbody>
         </table>
       </div>
+
+      <OwnershipHierarchy
+        stakeholders={stakeholders}
+        snapshots={snapshots}
+        onOpenProfile={onOpenProfile}
+        onRetrieve={onRetrieve}
+        retrievalState={retrievalState}
+      />
 
     </>
   );

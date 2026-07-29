@@ -4,19 +4,15 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 
 ## UC001 — View Ownership & Management Information
 
-- [x] Show company owners and executives in a read-only table and show owners again in a dedicated hierarchy.
-- [x] Show stakeholder name, National ID or Unified Number, type, role/designation, ownership percentage, and ownership level.
-- [x] Keep `Type` and `Ownership Level` in separate columns.
+- [x] Show company owners and executives in a read-only table first, then show owners again in a dedicated hierarchy below it.
+- [x] Keep the Current Structure table to exactly four columns: `Name`, `ID`, `Role`, and `Ownership Percentage`.
 - [x] Show direct and indirect ownership levels.
 - [x] Show the current company as the ownership-tree root.
 - [x] Show direct owners at level 1 and indirect owners at deeper ownership levels.
 - [x] Support multiple ownership levels with nested Blade-friendly HTML rows and no graph library.
 - [x] Allow admins to expand or collapse individual corporate-owner levels.
-- [x] Provide working Expand all and Collapse all controls.
-- [x] Show owner name, ID or Unified Number, type, role/designation, percentage, level, and last Wathq retrieval directly in each tree node.
-- [x] Keep every indirect owner’s parent company visible in the table’s `Ownership Through` column.
+- [x] Keep each hierarchy row simple: RTL owner name and ownership percentage only, plus the retrieval action when the owner is a company.
 - [x] Open clickable read-only profiles for individuals and companies.
-- [x] Use compact eye and redo icons for profile and Wathq row actions.
 - [x] Keep Arabic stakeholder names RTL and aligned to the same right edge, including indirect rows.
 - [x] Show the latest successful Wathq response as the current structure.
 - [x] Show last successful retrieval date and time.
@@ -33,6 +29,7 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 - [x] Show the empty-state action: “Call Wathq”.
 - [x] Call a corporate owner explicitly only; no automatic retrieval is triggered.
 - [x] Require a valid 10-digit Unified Number before showing the corporate-owner retrieval action.
+- [x] Show a visible `Retrieve Ownership` button on eligible corporate-owner hierarchy rows.
 - [x] Require confirmation before calling Wathq for a corporate owner.
 - [x] On success, add the returned owners to the hierarchy, update their indirect ownership level, and automatically expand the retrieved corporate owner.
 - [x] On success, select and display the new per-company snapshot.

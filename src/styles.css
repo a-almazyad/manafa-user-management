@@ -3833,6 +3833,7 @@ select:focus-visible {
 }
 
 .ownership-hierarchy-section {
+  margin-top: 28px;
   margin-bottom: 26px;
 }
 
@@ -3845,8 +3846,8 @@ select:focus-visible {
 }
 
 .ownership-panel-heading {
-  min-height: 66px;
-  padding: 10px 13px;
+  min-height: 60px;
+  padding: 10px 14px;
   background: #fff;
   border: 1px solid #dfe1e6;
   border-bottom: 0;
@@ -3855,20 +3856,6 @@ select:focus-visible {
 
 .ownership-panel-heading > div:first-child {
   min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 10px;
-}
-
-.ownership-panel-icon {
-  width: 34px;
-  height: 34px;
-  flex: 0 0 auto;
-  display: grid;
-  place-items: center;
-  color: #0c66e4;
-  background: #e9f2ff;
-  border-radius: 4px;
 }
 
 .ownership-panel-heading h3,
@@ -3888,65 +3875,12 @@ select:focus-visible {
   line-height: 18px;
 }
 
-.ownership-tree-toolbar {
-  flex: 0 0 auto;
-  display: flex;
-  align-items: center;
-  gap: 4px;
-}
-
-.ownership-tree-toolbar button {
-  min-height: 30px;
-  padding: 0 8px;
-  color: #0c66e4;
-  background: transparent;
-  border-radius: 3px;
-  font-size: 11px;
-  font-weight: 650;
-  cursor: pointer;
-}
-
-.ownership-tree-toolbar button:hover {
-  background: #e9f2ff;
-}
-
 .ownership-tree-shell {
   max-width: 100%;
-  overflow-x: auto;
+  overflow: hidden;
   background: #fff;
   border: 1px solid #dfe1e6;
   border-radius: 0 0 4px 4px;
-}
-
-.ownership-tree-board {
-  min-width: 1030px;
-}
-
-.ownership-tree-column-head,
-.ownership-tree-row {
-  display: grid;
-  grid-template-columns: minmax(320px, 1.6fr) 170px 105px 160px 180px 82px;
-  align-items: stretch;
-}
-
-.ownership-tree-column-head {
-  min-height: 40px;
-  color: #fff;
-  background: #080711;
-}
-
-.ownership-tree-column-head span {
-  display: flex;
-  align-items: center;
-  padding: 0 10px;
-  border-right: 1px solid #292736;
-  font-size: 11px;
-  font-weight: 650;
-}
-
-.ownership-tree-column-head span:last-child {
-  justify-content: center;
-  border-right: 0;
 }
 
 .ownership-tree-list,
@@ -3962,7 +3896,12 @@ select:focus-visible {
 }
 
 .ownership-tree-row {
-  min-height: 76px;
+  min-height: 56px;
+  display: grid;
+  grid-template-columns: 28px minmax(240px, 1fr) 96px 170px;
+  align-items: center;
+  gap: 10px;
+  padding: 7px 12px 7px calc(12px + var(--ownership-indent));
   color: #172b4d;
   background: #fff;
   border-top: 1px solid #dfe1e6;
@@ -3978,21 +3917,18 @@ select:focus-visible {
 
 .ownership-tree-node.is-indirect > .ownership-tree-row {
   background: #f7f8f9;
-  box-shadow: inset 3px 0 #b3d4ff;
+  box-shadow: inset 2px 0 #b3d4ff;
 }
 
 .ownership-tree-row:hover {
   background: #f1f7ff;
 }
 
-.ownership-tree-identity-cell {
-  min-width: 0;
+.ownership-tree-leading {
+  width: 28px;
+  height: 28px;
   display: grid;
-  grid-template-columns: 28px 30px minmax(0, 1fr);
-  align-items: center;
-  gap: 7px;
-  padding: 9px 10px 9px calc(10px + var(--ownership-indent));
-  border-right: 1px solid #dfe1e6;
+  place-items: center;
 }
 
 .ownership-tree-toggle,
@@ -4017,41 +3953,14 @@ select:focus-visible {
   background: #deebff;
 }
 
-.ownership-tree-entity-icon {
-  width: 30px;
-  height: 30px;
-  display: grid;
-  place-items: center;
-  border-radius: 50%;
-}
-
-.ownership-tree-entity-icon--company {
-  color: #403294;
-  background: #eae6ff;
-}
-
-.ownership-tree-entity-icon--individual {
-  color: #0747a6;
-  background: #deebff;
-}
-
-.ownership-tree-identity {
-  min-width: 0;
-  display: grid;
-  gap: 4px;
-}
-
 .ownership-tree-name {
   width: 100%;
-  overflow: hidden;
   padding: 0;
   color: #0c66e4;
   background: transparent;
   direction: rtl;
   text-align: right;
-  text-overflow: ellipsis;
   unicode-bidi: isolate;
-  white-space: nowrap;
   font-size: 14px;
   line-height: 20px;
   font-weight: 680;
@@ -4062,89 +3971,64 @@ select:focus-visible {
   text-decoration: underline;
 }
 
-.ownership-tree-node-meta {
-  min-width: 0;
-  display: flex;
-  align-items: center;
-  gap: 6px;
-  color: #6b778c;
-  font-size: 10px;
+.ownership-tree-percentage {
+  justify-self: end;
+  color: #172b4d;
+  font-size: 13px;
+  line-height: 20px;
+  font-variant-numeric: tabular-nums;
+  font-weight: 700;
 }
 
-.ownership-tree-node-meta > span:last-child {
-  overflow: hidden;
-  text-overflow: ellipsis;
+.ownership-tree-root-label {
+  justify-self: end;
+  color: #44546f;
+  font-size: 11px;
+  line-height: 18px;
+  font-weight: 650;
+}
+
+.ownership-tree-retrieve {
+  min-width: 154px;
+  justify-content: center;
+  justify-self: end;
   white-space: nowrap;
 }
 
-.ownership-tree-data {
-  min-width: 0;
-  display: grid;
-  align-content: center;
-  gap: 2px;
-  padding: 9px 10px;
-  border-right: 1px solid #dfe1e6;
-}
-
-.ownership-tree-data > span {
-  color: #6b778c;
-  font-size: 9px;
-  line-height: 13px;
-}
-
-.ownership-tree-data > strong {
-  overflow-wrap: anywhere;
-  color: #172b4d;
-  font-size: 11px;
-  line-height: 16px;
-  font-weight: 650;
-}
-
-.ownership-tree-data.is-empty > strong {
-  color: #7a869a;
-}
-
-.ownership-tree-data > small {
-  color: #974f0c;
-  font-size: 9px;
-  line-height: 13px;
-  font-weight: 650;
-}
-
-.ownership-tree-actions {
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  gap: 2px;
-  padding: 8px 6px;
-}
-
-.ownership-tree-actions .table-icon-action + .table-icon-action {
-  margin-left: 0;
+.ownership-tree-action-placeholder {
+  width: 154px;
 }
 
 .ownership-table-heading {
-  min-height: 62px;
+  min-height: 54px;
   align-items: flex-end;
   justify-content: flex-start;
   padding: 0 2px 10px;
 }
 
 .ownership-management-table {
-  min-width: 1470px;
+  min-width: 860px;
 }
 
-.ownership-management-table .uc-owner-col-name { width: 19%; }
-.ownership-management-table .uc-owner-col-id { width: 12%; }
-.ownership-management-table .uc-owner-col-type { width: 8%; }
-.ownership-management-table .uc-owner-col-role { width: 13%; }
-.ownership-management-table .uc-owner-col-percentage { width: 8%; }
-.ownership-management-table .uc-owner-col-level { width: 9%; }
-.ownership-management-table .uc-owner-col-through { width: 20%; }
-.ownership-management-table .uc-owner-col-action { width: 11%; }
+.ownership-management-table .uc-owner-col-name { width: 38%; }
+.ownership-management-table .uc-owner-col-id { width: 23%; }
+.ownership-management-table .uc-owner-col-role { width: 19%; }
+.ownership-management-table .uc-owner-col-percentage { width: 20%; }
 
-.ownership-management-table tbody tr.is-indirect-row {
-  background: #f4f7fd;
+@container admin-content (max-width: 720px) {
+  .ownership-tree-row {
+    grid-template-columns: 28px minmax(0, 1fr) auto;
+    row-gap: 6px;
+  }
+
+  .ownership-tree-retrieve {
+    grid-column: 2 / -1;
+    justify-self: start;
+  }
+
+  .ownership-tree-action-placeholder {
+    display: none;
+  }
 }
 
 .ownership-profile-cell {
