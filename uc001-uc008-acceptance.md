@@ -4,12 +4,17 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 
 ## UC001 — View Ownership & Management Information
 
-- [x] Show company owners and executives in a single read-only view.
+- [x] Show company owners and executives in a read-only table and show owners again in a dedicated hierarchy.
 - [x] Show stakeholder name, National ID or Unified Number, type, role/designation, ownership percentage, and ownership level.
 - [x] Keep `Type` and `Ownership Level` in separate columns.
 - [x] Show direct and indirect ownership levels.
-- [x] Keep the ownership hierarchy in one flat Blade-friendly table with no collapsible rows.
-- [x] Show every indirect owner’s parent company in an `Ownership Through` column.
+- [x] Show the current company as the ownership-tree root.
+- [x] Show direct owners at level 1 and indirect owners at deeper ownership levels.
+- [x] Support multiple ownership levels with nested Blade-friendly HTML rows and no graph library.
+- [x] Allow admins to expand or collapse individual corporate-owner levels.
+- [x] Provide working Expand all and Collapse all controls.
+- [x] Show owner name, ID or Unified Number, type, role/designation, percentage, level, and last Wathq retrieval directly in each tree node.
+- [x] Keep every indirect owner’s parent company visible in the table’s `Ownership Through` column.
 - [x] Open clickable read-only profiles for individuals and companies.
 - [x] Use compact eye and redo icons for profile and Wathq row actions.
 - [x] Keep Arabic stakeholder names RTL and aligned to the same right edge, including indirect rows.
@@ -29,7 +34,7 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 - [x] Call a corporate owner explicitly only; no automatic retrieval is triggered.
 - [x] Require a valid 10-digit Unified Number before showing the corporate-owner retrieval action.
 - [x] Require confirmation before calling Wathq for a corporate owner.
-- [x] On success, add the returned owners to the hierarchy and update their indirect ownership level.
+- [x] On success, add the returned owners to the hierarchy, update their indirect ownership level, and automatically expand the retrieved corporate owner.
 - [x] On success, select and display the new per-company snapshot.
 - [x] Enforce a visible cooldown after a successful corporate-owner retrieval.
 - [x] Show change history with changed information, previous value, updated value, timestamp, and source.

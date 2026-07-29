@@ -1,15 +1,35 @@
 import { useEffect, useMemo, useState } from "react";
 import CheckCircleIcon from "@atlaskit/icon/core/check-circle";
+import ChevronDownIcon from "@atlaskit/icon/core/chevron-down";
+import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
 import DownloadIcon from "@atlaskit/icon/core/download";
 import EyeOpenIcon from "@atlaskit/icon/core/eye-open";
 import LockIcon from "@atlaskit/icon/core/lock-locked";
+import OfficeBuildingIcon from "@atlaskit/icon/core/office-building";
+import PersonIcon from "@atlaskit/icon/core/person";
 import RedoIcon from "@atlaskit/icon/core/redo";
 import RefreshIcon from "@atlaskit/icon/core/refresh";
+import TreeIcon from "@atlaskit/icon/core/tree";
 import WarningIcon from "@atlaskit/icon/core/warning";
 
 const MAIN_COMPANY_ID = "1010225259";
 const LOADED_CORPORATE_OWNER_ID = "1010123456";
+const PORTFOLIO_OWNER_ID = "7000002814";
 const UNCALLED_CORPORATE_OWNER_ID = "7000018432";
+const VALID_UNIFIED_NUMBER_PATTERN = /^\d{10}$/;
+
+const mainCompanyStakeholder = {
+  key: "main-company",
+  id: MAIN_COMPANY_ID,
+  name: "شركة اسمنت الجوف",
+  stakeholderType: "Company",
+  role: "Current Company",
+  designation: "Borrower Company",
+  ownership: null,
+  level: "Root",
+  source: "Wathq",
+  isRoot: true,
+};
 
 const ownershipStakeholdersSeed = [
   {
@@ -48,7 +68,7 @@ const ownershipStakeholdersSeed = [
   },
   {
     key: "owner-industrial-portfolio",
-    id: "7000002814",
+    id: PORTFOLIO_OWNER_ID,
     name: "محفظة القطاع الصناعي",
     stakeholderType: "Company",
     role: "Owner",
@@ -57,6 +77,33 @@ const ownershipStakeholdersSeed = [
     level: "Indirect",
     source: "Wathq",
     parentId: LOADED_CORPORATE_OWNER_ID,
+    childrenLoaded: true,
+  },
+  {
+    key: "owner-industrial-portfolio-person",
+    id: "1035582147",
+    name: "فهد بن سليمان الدوسري",
+    stakeholderType: "Individual",
+    role: "Owner",
+    designation: "Partner",
+    ownership: 55,
+    level: "Indirect",
+    source: "Wathq",
+    parentId: PORTFOLIO_OWNER_ID,
+  },
+  {
+    key: "owner-industrial-portfolio-company",
+    id: "7000049128",
+    name: "شركة أصول الصناعة",
+    stakeholderType: "Company",
+    role: "Owner",
+    designation: "Corporate Owner",
+    ownership: 45,
+    level: "Indirect",
+    source: "Wathq",
+    parentId: PORTFOLIO_OWNER_ID,
+    childrenLoaded: false,
+    unifiedNumber: "7000049128",
   },
   {
     key: "owner-industrial-person",
@@ -134,6 +181,52 @@ const retrievedCorporateChildren = [
   },
 ];
 
+const retrievedCorporateChildrenByCompany = {
+  [UNCALLED_CORPORATE_OWNER_ID]: retrievedCorporateChildren,
+  "7000049128": [
+    {
+      key: "owner-assets-industry-person",
+      id: "1047712856",
+      name: "خالد بن ناصر السبيعي",
+      stakeholderType: "Individual",
+      role: "Owner",
+      designation: "Partner",
+      ownership: 60,
+      level: "Indirect",
+      source: "Wathq",
+      parentId: "7000049128",
+    },
+    {
+      key: "owner-assets-industry-company",
+      id: "7000073261",
+      name: "شركة المدار للاستثمارات",
+      stakeholderType: "Company",
+      role: "Owner",
+      designation: "Corporate Owner",
+      ownership: 40,
+      level: "Indirect",
+      source: "Wathq",
+      parentId: "7000049128",
+      childrenLoaded: false,
+      unifiedNumber: "7000073261",
+    },
+  ],
+  "7000030172": [
+    {
+      key: "owner-rwafed-person",
+      id: "1026658174",
+      name: "سعود بن فهد القحطاني",
+      stakeholderType: "Individual",
+      role: "Owner",
+      designation: "Partner",
+      ownership: 100,
+      level: "Indirect",
+      source: "Wathq",
+      parentId: "7000030172",
+    },
+  ],
+};
+
 const mainSnapshotRows = ownershipStakeholdersSeed
   .filter((row) => !row.parentId)
   .map((row) => ({ ...row }));
@@ -183,6 +276,17 @@ const snapshotsSeed = {
       trigger: "Corporate owner retrieval",
       status: "Successful",
       rows: ownershipStakeholdersSeed.filter((row) => row.parentId === LOADED_CORPORATE_OWNER_ID),
+    },
+  ],
+  [PORTFOLIO_OWNER_ID]: [
+    {
+      id: "WTHQ-2026-0720-1435",
+      companyId: PORTFOLIO_OWNER_ID,
+      companyName: "محفظة القطاع الصناعي",
+      retrievedAt: "20 Jul 2026, 2:35 PM",
+      trigger: "Corporate owner retrieval",
+      status: "Successful",
+      rows: ownershipStakeholdersSeed.filter((row) => row.parentId === PORTFOLIO_OWNER_ID),
     },
   ],
   [UNCALLED_CORPORATE_OWNER_ID]: [],
@@ -463,6 +567,21 @@ function resetMainHorizontalScroll() {
   window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: 0, left: 0 }));
 }
 
+function getStakeholderRetrievalDate(stakeholder, snapshots) {
+  if (stakeholder.isRoot) return snapshots[MAIN_COMPANY_ID]?.[0]?.retrievedAt || "Not retrieved";
+  if (stakeholder.stakeholderType === "Company") return snapshots[stakeholder.id]?.[0]?.retrievedAt || "Not retrieved";
+  const sourceCompanyId = stakeholder.parentId || MAIN_COMPANY_ID;
+  return snapshots[sourceCompanyId]?.[0]?.retrievedAt || "Not retrieved";
+}
+
+function createProfileStakeholder(stakeholder, parent, snapshots) {
+  return {
+    ...stakeholder,
+    ownershipThrough: parent?.name || (stakeholder.isRoot ? "—" : mainCompanyStakeholder.name),
+    lastRetrieved: getStakeholderRetrievalDate(stakeholder, snapshots),
+  };
+}
+
 function ProfileModal({ stakeholder, onClose }) {
   return (
     <div className="modal-backdrop" role="presentation" onMouseDown={(event) => event.target === event.currentTarget && onClose()}>
@@ -484,11 +603,13 @@ function ProfileModal({ stakeholder, onClose }) {
           </div>
           <dl className="enhancement-detail-grid">
             <div><dt>{stakeholder.stakeholderType === "Company" ? "Unified Number" : "National ID / Iqama"}</dt><dd>{stakeholder.id}</dd></div>
-            <div><dt>Designation</dt><dd>{stakeholder.designation}</dd></div>
+            <div><dt>Stakeholder type</dt><dd>{stakeholder.stakeholderType}</dd></div>
+            <div><dt>Role / designation</dt><dd>{stakeholder.role} · {stakeholder.designation}</dd></div>
             <div><dt>Ownership percentage</dt><dd>{stakeholder.ownership == null ? "Not provided by Wathq" : `${stakeholder.ownership}%`}</dd></div>
             <div><dt>Ownership level</dt><dd>{stakeholder.level}</dd></div>
+            <div><dt>Ownership through</dt><dd lang="ar" dir="rtl">{stakeholder.ownershipThrough || "—"}</dd></div>
             <div><dt>Source</dt><dd>{stakeholder.source}</dd></div>
-            <div><dt>Last successful retrieval</dt><dd>27 Jul 2026, 11:42 AM</dd></div>
+            <div><dt>Last successful retrieval</dt><dd>{stakeholder.lastRetrieved || "Not retrieved"}</dd></div>
           </dl>
         </div>
         <div className="modal-footer">
@@ -526,8 +647,239 @@ function WathqConfirmationModal({ company, onClose, onConfirm }) {
   );
 }
 
+function OwnershipTreeNode({
+  node,
+  depth,
+  childrenByParent,
+  expandedIds,
+  onToggle,
+  onOpenProfile,
+  onRetrieve,
+  retrievalState,
+  snapshots,
+  stakeholderById,
+  onRefreshMain,
+  mainCallInProgress,
+}) {
+  const children = childrenByParent.get(node.id) || [];
+  const hasChildren = children.length > 0;
+  const isExpanded = expandedIds.has(node.id);
+  const isRetrieving = retrievalState[node.id] === "inProgress";
+  const isCoolingDown = retrievalState[node.id] === "cooldown";
+  const canRetrieveOwnership = !node.isRoot
+    && node.stakeholderType === "Company"
+    && VALID_UNIFIED_NUMBER_PATTERN.test(node.id);
+  const shouldRetrieve = canRetrieveOwnership && !node.childrenLoaded && !hasChildren;
+  const parent = node.parentId ? stakeholderById.get(node.parentId) : null;
+  const profileStakeholder = createProfileStakeholder(node, parent, snapshots);
+  const levelLabel = node.isRoot
+    ? "Current company"
+    : depth === 1
+      ? "Level 1 · Direct"
+      : `Level ${depth} · Indirect`;
+  const ownershipActionLabel = isRetrieving
+    ? "Retrieving ownership from Wathq"
+    : isCoolingDown
+      ? "Ownership refresh cooldown active for 10 minutes"
+      : shouldRetrieve
+        ? `Retrieve ownership from Wathq for ${node.name}`
+        : `Refresh ownership from Wathq for ${node.name}`;
+
+  return (
+    <li
+      className={`ownership-tree-node${node.isRoot ? " is-root" : ""}${depth > 1 ? " is-indirect" : ""}`}
+      role="treeitem"
+      aria-level={depth + 1}
+      aria-expanded={hasChildren ? isExpanded : undefined}
+      style={{ "--ownership-indent": `${depth * 18}px` }}
+    >
+      <div className="ownership-tree-row">
+        <div className="ownership-tree-identity-cell">
+          {hasChildren ? (
+            <button
+              className="ownership-tree-toggle"
+              type="button"
+              onClick={() => onToggle(node.id)}
+              aria-label={`${isExpanded ? "Collapse" : "Expand"} ownership below ${node.name}`}
+              title={isExpanded ? "Collapse ownership level" : "Expand ownership level"}
+            >
+              {isExpanded ? <ChevronDownIcon label="" size="small" /> : <ChevronRightIcon label="" size="small" />}
+            </button>
+          ) : <span className="ownership-tree-toggle-placeholder" aria-hidden="true" />}
+          <span className={`ownership-tree-entity-icon ownership-tree-entity-icon--${node.stakeholderType.toLowerCase()}`} aria-hidden="true">
+            {node.stakeholderType === "Company" ? <OfficeBuildingIcon label="" size="small" /> : <PersonIcon label="" size="small" />}
+          </span>
+          <span className="ownership-tree-identity">
+            <button className="ownership-tree-name" type="button" onClick={() => onOpenProfile(profileStakeholder)} lang="ar" dir="rtl">
+              {node.name}
+            </button>
+            <span className="ownership-tree-node-meta">
+              <Badge tone={node.stakeholderType === "Company" ? "purple" : "blue"}>{node.stakeholderType}</Badge>
+              <span>{node.role} · {node.designation}</span>
+            </span>
+          </span>
+        </div>
+        <div className="ownership-tree-data"><span>ID / Unified Number</span><strong>{node.id}</strong></div>
+        <div className="ownership-tree-data"><span>Ownership</span><strong>{node.ownership == null ? "—" : `${node.ownership}%`}</strong></div>
+        <div className="ownership-tree-data">
+          <span>Ownership level</span>
+          <Badge tone={node.isRoot ? "blue" : depth === 1 ? "success" : "warning"}>{levelLabel}</Badge>
+        </div>
+        <div className={`ownership-tree-data${profileStakeholder.lastRetrieved === "Not retrieved" ? " is-empty" : ""}`}>
+          <span>Last Wathq retrieval</span>
+          <strong>{profileStakeholder.lastRetrieved}</strong>
+          {isRetrieving ? <small>Retrieval in progress…</small> : null}
+          {isCoolingDown ? <small>Cooldown active · 10 min</small> : null}
+        </div>
+        <div className="ownership-tree-actions">
+          <button className="table-icon-action" type="button" onClick={() => onOpenProfile(profileStakeholder)} aria-label={`View profile for ${node.name}`} title="View profile">
+            <EyeOpenIcon label="" size="small" />
+          </button>
+          {node.isRoot ? (
+            <button className="table-icon-action" type="button" onClick={onRefreshMain} disabled={mainCallInProgress} aria-label="Refresh main company ownership from Wathq" title="Refresh ownership from Wathq">
+              <RedoIcon label="" size="small" />
+            </button>
+          ) : null}
+          {canRetrieveOwnership ? (
+            <button className="table-icon-action" type="button" onClick={() => onRetrieve(node)} disabled={isRetrieving || isCoolingDown} aria-label={ownershipActionLabel} title={ownershipActionLabel}>
+              <RedoIcon label="" size="small" />
+            </button>
+          ) : null}
+        </div>
+      </div>
+      {hasChildren && isExpanded ? (
+        <ul className="ownership-tree-children" role="group">
+          {children.map((child) => (
+            <OwnershipTreeNode
+              key={child.key}
+              node={child}
+              depth={depth + 1}
+              childrenByParent={childrenByParent}
+              expandedIds={expandedIds}
+              onToggle={onToggle}
+              onOpenProfile={onOpenProfile}
+              onRetrieve={onRetrieve}
+              retrievalState={retrievalState}
+              snapshots={snapshots}
+              stakeholderById={stakeholderById}
+              onRefreshMain={onRefreshMain}
+              mainCallInProgress={mainCallInProgress}
+            />
+          ))}
+        </ul>
+      ) : null}
+    </li>
+  );
+}
+
+function OwnershipHierarchy({
+  stakeholders,
+  snapshots,
+  onOpenProfile,
+  onRetrieve,
+  retrievalState,
+  onRefreshMain,
+  mainCallInProgress,
+}) {
+  const owners = useMemo(
+    () => stakeholders.filter((stakeholder) => stakeholder.role === "Owner"),
+    [stakeholders],
+  );
+  const stakeholderById = useMemo(
+    () => new Map([mainCompanyStakeholder, ...owners].map((stakeholder) => [stakeholder.id, stakeholder])),
+    [owners],
+  );
+  const childrenByParent = useMemo(() => {
+    const grouped = new Map();
+    owners.forEach((owner) => {
+      const parentId = owner.parentId || MAIN_COMPANY_ID;
+      const children = grouped.get(parentId) || [];
+      children.push(owner);
+      grouped.set(parentId, children);
+    });
+    return grouped;
+  }, [owners]);
+  const [expandedIds, setExpandedIds] = useState(() => new Set([
+    MAIN_COMPANY_ID,
+    ...owners.filter((owner) => owner.childrenLoaded).map((owner) => owner.id),
+  ]));
+
+  useEffect(() => {
+    const expandableIds = new Set(
+      [MAIN_COMPANY_ID, ...owners.map((owner) => owner.id)]
+        .filter((ownerId) => (childrenByParent.get(ownerId) || []).length > 0),
+    );
+    setExpandedIds((current) => {
+      const next = new Set(current);
+      expandableIds.forEach((ownerId) => {
+        const owner = stakeholderById.get(ownerId);
+        if (owner?.childrenLoaded || owner?.isRoot) next.add(ownerId);
+      });
+      return next;
+    });
+  }, [childrenByParent, stakeholderById, owners]);
+
+  function toggleNode(nodeId) {
+    setExpandedIds((current) => {
+      const next = new Set(current);
+      if (next.has(nodeId)) next.delete(nodeId);
+      else next.add(nodeId);
+      return next;
+    });
+  }
+
+  function expandAll() {
+    setExpandedIds(new Set(
+      [MAIN_COMPANY_ID, ...owners.map((owner) => owner.id)]
+        .filter((ownerId) => (childrenByParent.get(ownerId) || []).length > 0),
+    ));
+  }
+
+  return (
+    <section className="ownership-hierarchy-section" aria-labelledby="ownership-hierarchy-heading">
+      <div className="ownership-panel-heading">
+        <div>
+          <span className="ownership-panel-icon" aria-hidden="true"><TreeIcon label="" /></span>
+          <div>
+            <h3 id="ownership-hierarchy-heading">Ownership Hierarchy</h3>
+            <p>Expand each corporate owner to review direct and indirect ownership levels.</p>
+          </div>
+        </div>
+        <div className="ownership-tree-toolbar">
+          <button type="button" onClick={expandAll}>Expand all</button>
+          <button type="button" onClick={() => setExpandedIds(new Set())}>Collapse all</button>
+        </div>
+      </div>
+      <div className="ownership-tree-shell">
+        <div className="ownership-tree-board">
+          <div className="ownership-tree-column-head" aria-hidden="true">
+            <span>Owner / company</span><span>ID / Unified Number</span><span>Ownership</span><span>Ownership level</span><span>Last Wathq retrieval</span><span>Actions</span>
+          </div>
+          <ul className="ownership-tree-list" role="tree" aria-label="Company ownership hierarchy">
+            <OwnershipTreeNode
+              node={mainCompanyStakeholder}
+              depth={0}
+              childrenByParent={childrenByParent}
+              expandedIds={expandedIds}
+              onToggle={toggleNode}
+              onOpenProfile={onOpenProfile}
+              onRetrieve={onRetrieve}
+              retrievalState={retrievalState}
+              snapshots={snapshots}
+              stakeholderById={stakeholderById}
+              onRefreshMain={onRefreshMain}
+              mainCallInProgress={mainCallInProgress}
+            />
+          </ul>
+        </div>
+      </div>
+    </section>
+  );
+}
+
 function OwnershipCurrentView({
   stakeholders,
+  snapshots,
   onOpenProfile,
   onRetrieve,
   retrievalState,
@@ -559,6 +911,20 @@ function OwnershipCurrentView({
         </div>
       ) : null}
 
+      <OwnershipHierarchy
+        stakeholders={stakeholders}
+        snapshots={snapshots}
+        onOpenProfile={onOpenProfile}
+        onRetrieve={onRetrieve}
+        retrievalState={retrievalState}
+        onRefreshMain={onRefreshMain}
+        mainCallInProgress={mainCallInProgress}
+      />
+
+      <div className="ownership-table-heading">
+        <h3>Owners &amp; Executives</h3>
+        <p>Read-only stakeholder information returned by the latest successful Wathq response.</p>
+      </div>
       <div className="table-shell enhancement-table-shell">
         <table className="users-table enhancement-table ownership-management-table">
           <colgroup>
@@ -581,7 +947,7 @@ function OwnershipCurrentView({
               const childCount = stakeholders.filter((candidate) => candidate.parentId === row.id).length;
               const isRetrieving = retrievalState[row.id] === "inProgress";
               const isCoolingDown = retrievalState[row.id] === "cooldown";
-              const hasValidUnifiedNumber = /^\d{10}$/.test(row.id);
+              const hasValidUnifiedNumber = VALID_UNIFIED_NUMBER_PATTERN.test(row.id);
               const parentOwner = row.parentId ? stakeholderById.get(row.parentId) : null;
               const canRetrieveOwnership = row.stakeholderType === "Company" && hasValidUnifiedNumber;
               const shouldRetrieve = canRetrieveOwnership && !row.childrenLoaded && !childCount;
@@ -606,7 +972,7 @@ function OwnershipCurrentView({
                     {parentOwner?.name || "—"}
                   </td>
                   <td className="table-icon-actions">
-                    <button className="table-icon-action" type="button" onClick={() => onOpenProfile(row)} aria-label={`View profile for ${row.name}`} title="View profile">
+                    <button className="table-icon-action" type="button" onClick={() => onOpenProfile(createProfileStakeholder(row, parentOwner, snapshots))} aria-label={`View profile for ${row.name}`} title="View profile">
                       <EyeOpenIcon label="" size="small" />
                     </button>
                     {canRetrieveOwnership ? (
@@ -645,7 +1011,7 @@ function SnapshotDetails({ snapshot, onOpenProfile }) {
           <tbody>
             {snapshot.rows.map((row) => (
               <tr key={`${snapshot.id}-${row.key}`}>
-                <td><button className="stakeholder-link" type="button" onClick={() => onOpenProfile(row)} lang="ar" dir="rtl">{row.name}</button></td>
+                <td><button className="stakeholder-link" type="button" onClick={() => onOpenProfile({ ...row, ownershipThrough: snapshot.companyName, lastRetrieved: snapshot.retrievedAt })} lang="ar" dir="rtl">{row.name}</button></td>
                 <td className="ownership-number">{row.id}</td>
                 <td>{row.role} · {row.designation}</td>
                 <td className="ownership-number">{row.ownership == null ? "—" : `${row.ownership}%`}</td>
@@ -659,17 +1025,21 @@ function SnapshotDetails({ snapshot, onOpenProfile }) {
   );
 }
 
-function OwnershipSnapshotsView({ snapshots, selectedCompany, onCompanyChange, onOpenProfile, onCallWathq, retrievalState }) {
+function OwnershipSnapshotsView({ snapshots, stakeholders, selectedCompany, onCompanyChange, onOpenProfile, onCallWathq, retrievalState }) {
   const companySnapshots = snapshots[selectedCompany] || [];
   const [selectedSnapshotId, setSelectedSnapshotId] = useState(companySnapshots[0]?.id || "");
   const selectedSnapshot = companySnapshots.find((snapshot) => snapshot.id === selectedSnapshotId) || companySnapshots[0];
+  const companyOptions = useMemo(
+    () => [mainCompanyStakeholder, ...stakeholders.filter((stakeholder) => stakeholder.stakeholderType === "Company")],
+    [stakeholders],
+  );
 
   function changeCompany(value) {
     onCompanyChange(value);
     setSelectedSnapshotId((snapshots[value] || [])[0]?.id || "");
   }
 
-  const uncalledCompany = ownershipStakeholdersSeed.find((row) => row.id === selectedCompany);
+  const uncalledCompany = companyOptions.find((row) => row.id === selectedCompany);
 
   return (
     <>
@@ -678,9 +1048,7 @@ function OwnershipSnapshotsView({ snapshots, selectedCompany, onCompanyChange, o
         <label className="snapshot-company-filter">
           <span>Company</span>
           <select value={selectedCompany} onChange={(event) => changeCompany(event.target.value)}>
-            <option value={MAIN_COMPANY_ID}>شركة اسمنت الجوف · {MAIN_COMPANY_ID}</option>
-            <option value={LOADED_CORPORATE_OWNER_ID}>الشركة الوطنية للاستثمار الصناعي · {LOADED_CORPORATE_OWNER_ID}</option>
-            <option value={UNCALLED_CORPORATE_OWNER_ID}>شركة الشمال القابضة · {UNCALLED_CORPORATE_OWNER_ID}</option>
+            {companyOptions.map((company) => <option key={company.id} value={company.id}>{company.name} · {company.id}</option>)}
           </select>
         </label>
       </div>
@@ -752,12 +1120,14 @@ export function OwnershipManagement({ onNotify }) {
     setConfirmCompany(null);
     setRetrievalState((current) => ({ ...current, [company.id]: "inProgress" }));
     window.setTimeout(() => {
-      const rows = company.id === UNCALLED_CORPORATE_OWNER_ID
-        ? retrievedCorporateChildren.map((row) => ({ ...row }))
-        : stakeholders.filter((row) => row.parentId === company.id).map((row) => ({ ...row }));
-      if (company.id === UNCALLED_CORPORATE_OWNER_ID) {
-        setStakeholders((current) => current.map((row) => row.id === company.id ? { ...row, childrenLoaded: true } : row).concat(rows));
-      }
+      const existingRows = stakeholders.filter((row) => row.parentId === company.id);
+      const rows = (existingRows.length ? existingRows : retrievedCorporateChildrenByCompany[company.id] || [])
+        .map((row) => ({ ...row }));
+      setStakeholders((current) => {
+        const updated = current.map((row) => row.id === company.id ? { ...row, childrenLoaded: true } : row);
+        if (current.some((row) => row.parentId === company.id)) return updated;
+        return updated.concat(rows);
+      });
       setSnapshots((current) => ({
         ...current,
         [company.id]: [{
@@ -797,6 +1167,7 @@ export function OwnershipManagement({ onNotify }) {
       {view === "Current Structure" ? (
         <OwnershipCurrentView
           stakeholders={stakeholders}
+          snapshots={snapshots}
           onOpenProfile={setProfile}
           onRetrieve={setConfirmCompany}
           retrievalState={retrievalState}
@@ -809,6 +1180,7 @@ export function OwnershipManagement({ onNotify }) {
       {view === "Wathq Snapshots" ? (
         <OwnershipSnapshotsView
           snapshots={snapshots}
+          stakeholders={stakeholders}
           selectedCompany={snapshotCompany}
           onCompanyChange={setSnapshotCompany}
           onOpenProfile={setProfile}

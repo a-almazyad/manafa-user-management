@@ -3832,6 +3832,304 @@ select:focus-visible {
   line-height: 18px;
 }
 
+.ownership-hierarchy-section {
+  margin-bottom: 26px;
+}
+
+.ownership-panel-heading,
+.ownership-table-heading {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 18px;
+}
+
+.ownership-panel-heading {
+  min-height: 66px;
+  padding: 10px 13px;
+  background: #fff;
+  border: 1px solid #dfe1e6;
+  border-bottom: 0;
+  border-radius: 4px 4px 0 0;
+}
+
+.ownership-panel-heading > div:first-child {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+
+.ownership-panel-icon {
+  width: 34px;
+  height: 34px;
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  color: #0c66e4;
+  background: #e9f2ff;
+  border-radius: 4px;
+}
+
+.ownership-panel-heading h3,
+.ownership-table-heading h3 {
+  margin: 0;
+  color: #172b4d;
+  font-size: 16px;
+  line-height: 22px;
+  font-weight: 720;
+}
+
+.ownership-panel-heading p,
+.ownership-table-heading p {
+  margin: 1px 0 0;
+  color: #6b778c;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.ownership-tree-toolbar {
+  flex: 0 0 auto;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+}
+
+.ownership-tree-toolbar button {
+  min-height: 30px;
+  padding: 0 8px;
+  color: #0c66e4;
+  background: transparent;
+  border-radius: 3px;
+  font-size: 11px;
+  font-weight: 650;
+  cursor: pointer;
+}
+
+.ownership-tree-toolbar button:hover {
+  background: #e9f2ff;
+}
+
+.ownership-tree-shell {
+  max-width: 100%;
+  overflow-x: auto;
+  background: #fff;
+  border: 1px solid #dfe1e6;
+  border-radius: 0 0 4px 4px;
+}
+
+.ownership-tree-board {
+  min-width: 1030px;
+}
+
+.ownership-tree-column-head,
+.ownership-tree-row {
+  display: grid;
+  grid-template-columns: minmax(320px, 1.6fr) 170px 105px 160px 180px 82px;
+  align-items: stretch;
+}
+
+.ownership-tree-column-head {
+  min-height: 40px;
+  color: #fff;
+  background: #080711;
+}
+
+.ownership-tree-column-head span {
+  display: flex;
+  align-items: center;
+  padding: 0 10px;
+  border-right: 1px solid #292736;
+  font-size: 11px;
+  font-weight: 650;
+}
+
+.ownership-tree-column-head span:last-child {
+  justify-content: center;
+  border-right: 0;
+}
+
+.ownership-tree-list,
+.ownership-tree-children {
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.ownership-tree-node {
+  margin: 0;
+  padding: 0;
+}
+
+.ownership-tree-row {
+  min-height: 76px;
+  color: #172b4d;
+  background: #fff;
+  border-top: 1px solid #dfe1e6;
+}
+
+.ownership-tree-list > .ownership-tree-node:first-child > .ownership-tree-row {
+  border-top: 0;
+}
+
+.ownership-tree-node.is-root > .ownership-tree-row {
+  background: #e9f2ff;
+}
+
+.ownership-tree-node.is-indirect > .ownership-tree-row {
+  background: #f7f8f9;
+  box-shadow: inset 3px 0 #b3d4ff;
+}
+
+.ownership-tree-row:hover {
+  background: #f1f7ff;
+}
+
+.ownership-tree-identity-cell {
+  min-width: 0;
+  display: grid;
+  grid-template-columns: 28px 30px minmax(0, 1fr);
+  align-items: center;
+  gap: 7px;
+  padding: 9px 10px 9px calc(10px + var(--ownership-indent));
+  border-right: 1px solid #dfe1e6;
+}
+
+.ownership-tree-toggle,
+.ownership-tree-toggle-placeholder {
+  width: 28px;
+  height: 28px;
+}
+
+.ownership-tree-toggle {
+  display: grid;
+  place-items: center;
+  padding: 0;
+  color: #44546f;
+  background: transparent;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+.ownership-tree-toggle:hover,
+.ownership-tree-toggle:focus-visible {
+  color: #0c66e4;
+  background: #deebff;
+}
+
+.ownership-tree-entity-icon {
+  width: 30px;
+  height: 30px;
+  display: grid;
+  place-items: center;
+  border-radius: 50%;
+}
+
+.ownership-tree-entity-icon--company {
+  color: #403294;
+  background: #eae6ff;
+}
+
+.ownership-tree-entity-icon--individual {
+  color: #0747a6;
+  background: #deebff;
+}
+
+.ownership-tree-identity {
+  min-width: 0;
+  display: grid;
+  gap: 4px;
+}
+
+.ownership-tree-name {
+  width: 100%;
+  overflow: hidden;
+  padding: 0;
+  color: #0c66e4;
+  background: transparent;
+  direction: rtl;
+  text-align: right;
+  text-overflow: ellipsis;
+  unicode-bidi: isolate;
+  white-space: nowrap;
+  font-size: 14px;
+  line-height: 20px;
+  font-weight: 680;
+  cursor: pointer;
+}
+
+.ownership-tree-name:hover {
+  text-decoration: underline;
+}
+
+.ownership-tree-node-meta {
+  min-width: 0;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: #6b778c;
+  font-size: 10px;
+}
+
+.ownership-tree-node-meta > span:last-child {
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.ownership-tree-data {
+  min-width: 0;
+  display: grid;
+  align-content: center;
+  gap: 2px;
+  padding: 9px 10px;
+  border-right: 1px solid #dfe1e6;
+}
+
+.ownership-tree-data > span {
+  color: #6b778c;
+  font-size: 9px;
+  line-height: 13px;
+}
+
+.ownership-tree-data > strong {
+  overflow-wrap: anywhere;
+  color: #172b4d;
+  font-size: 11px;
+  line-height: 16px;
+  font-weight: 650;
+}
+
+.ownership-tree-data.is-empty > strong {
+  color: #7a869a;
+}
+
+.ownership-tree-data > small {
+  color: #974f0c;
+  font-size: 9px;
+  line-height: 13px;
+  font-weight: 650;
+}
+
+.ownership-tree-actions {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 2px;
+  padding: 8px 6px;
+}
+
+.ownership-tree-actions .table-icon-action + .table-icon-action {
+  margin-left: 0;
+}
+
+.ownership-table-heading {
+  min-height: 62px;
+  align-items: flex-end;
+  justify-content: flex-start;
+  padding: 0 2px 10px;
+}
+
 .ownership-management-table {
   min-width: 1470px;
 }
