@@ -933,7 +933,7 @@ function UsersSection({ users, onAddUser, onNotify, resetVersion }) {
       >
         {!isPermissionWorkspace ? (
           <div className="users-tabs" role="tablist" aria-label="User management views">
-            {["Company Users", "Invited Users", "Ownership & Management", "Permission Requests"].map((tab) => (
+            {["Company Users", "Invited Users", "Ownership & Management"].map((tab) => (
               <button key={tab} type="button" role="tab" aria-selected={activeTab === tab} className={activeTab === tab ? "is-active" : ""} onClick={() => changeTab(tab)}>{tab}</button>
             ))}
           </div>

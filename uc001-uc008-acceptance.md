@@ -37,6 +37,7 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 ## UC008 — View Permission Request Details
 
 - [x] Preserve the production `Previous Requests` and `Pending Requests` internal tabs.
+- [x] Keep Permission Requests out of the lower User Management tab row and enter the register from `Show All` on the overview request card.
 - [x] Open the Permission Request register, request details, and Authorization configurator as dedicated admin subpages without the overview cards or User Management tab strip.
 - [x] Return from request details/configuration to the request register, and return to the overview through the active User Management sidebar item.
 - [x] Include manual-review requests.
@@ -76,6 +77,7 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 - [x] Keep all six overview cards visible above Company Users, Invited Users, and Ownership & Management; hide them on the dedicated Permission Request subpages.
 - [x] Hide the previous `Ownership Structure` and `Group Structure` tabs.
 - [x] Preserve the current production-style header, CR search, company name, sidebar, and help action.
+- [x] Reflow overview cards from three to two to one column without page-level horizontal clipping; keep horizontal scrolling scoped to dense tables.
 - [x] Reuse the existing Manafa/Atlassian table density, borders, alternating rows, badges, and buttons.
 - [x] Keep the self-hosted Cairo font and official Manafa logo.
 - [x] Preserve the working sidebar collapse/expand behavior.
