@@ -460,8 +460,7 @@ const configurablePermissions = permissionGroups.flatMap((group) => group.permis
 
 function resetMainHorizontalScroll() {
   const scrollContainer = document.querySelector(".content-scroll");
-  const currentTop = scrollContainer?.scrollTop || 0;
-  window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: currentTop, left: 0 }));
+  window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: 0, left: 0 }));
 }
 
 function ProfileModal({ stakeholder, onClose }) {

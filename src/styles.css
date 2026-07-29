@@ -762,6 +762,10 @@ select:focus-visible {
   margin-top: 45px;
 }
 
+.permission-workspace-shell {
+  min-height: calc(100dvh - 220px);
+}
+
 .users-tabs {
   height: 38px;
   display: flex;

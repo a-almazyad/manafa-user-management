@@ -890,7 +890,7 @@ function AddUserModal({ onClose, onAdd }) {
   );
 }
 
-function UsersSection({ users, onAddUser, onNotify }) {
+function UsersSection({ users, onAddUser, onNotify, resetVersion }) {
   const [activeTab, setActiveTab] = useState("Company Users");
   const [filterOpen, setFilterOpen] = useState(false);
   const [query, setQuery] = useState("");
@@ -906,6 +906,13 @@ function UsersSection({ users, onAddUser, onNotify }) {
   });
 
   const isDirectoryTab = activeTab === "Company Users" || activeTab === "Invited Users";
+  const isPermissionWorkspace = activeTab === "Permission Requests";
+
+  useEffect(() => {
+    setActiveTab("Company Users");
+    setPage(1);
+    setFilterOpen(false);
+  }, [resetVersion]);
 
   function changeTab(tab) {
     setActiveTab(tab);
@@ -913,18 +920,24 @@ function UsersSection({ users, onAddUser, onNotify }) {
     setFilterOpen(false);
     const scrollContainer = document.querySelector(".content-scroll");
     const currentTop = scrollContainer?.scrollTop || 0;
-    window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: currentTop, left: 0 }));
+    window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: tab === "Permission Requests" ? 0 : currentTop, left: 0 }));
   }
 
   return (
     <>
-      <OverviewCards onPermissionRequests={() => changeTab("Permission Requests")} permissionStats={permissionStats} />
-      <section className="users-section has-overview" aria-labelledby="users-heading">
-        <div className="users-tabs" role="tablist" aria-label="User management views">
-          {["Company Users", "Invited Users", "Ownership & Management", "Permission Requests"].map((tab) => (
-            <button key={tab} type="button" role="tab" aria-selected={activeTab === tab} className={activeTab === tab ? "is-active" : ""} onClick={() => changeTab(tab)}>{tab}</button>
-          ))}
-        </div>
+      {!isPermissionWorkspace ? <OverviewCards onPermissionRequests={() => changeTab("Permission Requests")} permissionStats={permissionStats} /> : null}
+      <section
+        className={`users-section${isPermissionWorkspace ? " permission-workspace-shell" : " has-overview"}`}
+        aria-labelledby={isPermissionWorkspace ? undefined : "users-heading"}
+        aria-label={isPermissionWorkspace ? "Permission requests" : undefined}
+      >
+        {!isPermissionWorkspace ? (
+          <div className="users-tabs" role="tablist" aria-label="User management views">
+            {["Company Users", "Invited Users", "Ownership & Management", "Permission Requests"].map((tab) => (
+              <button key={tab} type="button" role="tab" aria-selected={activeTab === tab} className={activeTab === tab ? "is-active" : ""} onClick={() => changeTab(tab)}>{tab}</button>
+            ))}
+          </div>
+        ) : null}
 
         {isDirectoryTab ? (
           <>
@@ -964,6 +977,7 @@ export function App() {
   const [modalOpen, setModalOpen] = useState(false);
   const [toast, setToast] = useState("");
   const [helpOpen, setHelpOpen] = useState(false);
+  const [userManagementResetVersion, setUserManagementResetVersion] = useState(0);
   const contentScrollRef = useRef(null);
   const financeScreens = ["Funding Requests", "Loans", "Facility Contracts", "Pledge Agreement"];
 
@@ -996,13 +1010,23 @@ export function App() {
           collapsed={sidebarCollapsed}
           onToggleCollapse={() => setSidebarCollapsed((value) => !value)}
           onSelect={(item) => {
+            if (item === "User Management" && activeSidebarItem === "User Management") {
+              setUserManagementResetVersion((version) => version + 1);
+            }
             setActiveSidebarItem(item);
             if (item !== "User Management" && !financeScreens.includes(item)) setToast(`${item} is available as a visual navigation state in this prototype`);
           }}
         />
         <main className="content-scroll" ref={contentScrollRef}>
           <div className={`content-canvas${activeSidebarItem !== "User Management" ? " content-canvas--finance" : ""}`}>
-            {activeSidebarItem === "User Management" ? <UsersSection users={users} onAddUser={() => setModalOpen(true)} onNotify={setToast} /> : null}
+            {activeSidebarItem === "User Management" ? (
+              <UsersSection
+                users={users}
+                onAddUser={() => setModalOpen(true)}
+                onNotify={setToast}
+                resetVersion={userManagementResetVersion}
+              />
+            ) : null}
             {financeScreens.includes(activeSidebarItem) ? <FinanceWorkspace screen={activeSidebarItem} onNavigate={setActiveSidebarItem} onNotify={setToast} /> : null}
             {activeSidebarItem !== "User Management" && !financeScreens.includes(activeSidebarItem) ? <FinanceWorkspace screen={activeSidebarItem} onNavigate={setActiveSidebarItem} onNotify={setToast} /> : null}
           </div>
