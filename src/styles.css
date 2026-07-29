@@ -3448,6 +3448,30 @@ select:focus-visible {
 }
 
 @container admin-content (max-width: 1100px) {
+  .card-title-row {
+    gap: 8px;
+  }
+
+  .card-title-group,
+  .card-title-actions {
+    gap: 8px;
+  }
+
+  .card-title-row h2 {
+    min-width: 0;
+    font-size: 16px;
+    line-height: 21px;
+    white-space: normal;
+  }
+
+  .card-title-group .status-pill {
+    flex: 0 0 auto;
+    height: 24px;
+    padding-inline: 8px;
+  }
+}
+
+@container admin-content (max-width: 900px) {
   .overview-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
     gap: 22px 20px;
@@ -3457,10 +3481,6 @@ select:focus-visible {
   .overview-card:nth-child(n + 4) {
     height: auto;
     min-height: 266px;
-  }
-
-  .card-title-row h2 {
-    white-space: normal;
   }
 
   .requester-summary {
