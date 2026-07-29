@@ -463,12 +463,18 @@ function OverviewCards({ onPermissionRequests, permissionStats }) {
         <div className="empty-copy">No main owners selected</div>
       </article>
 
-      <article className="overview-card empty-card">
-        <CardTitle showAll onShowAll={onPermissionRequests}>Permissions Request</CardTitle>
-        <div className="permission-card-summary">
-          <strong>{permissionStats.total} requests</strong>
-          <span>{permissionStats.active} active · {permissionStats.historical} historical</span>
-        </div>
+      <article className="overview-card permission-overview-card">
+        <CardTitle showAll onShowAll={onPermissionRequests}>Permissions Request ({permissionStats.pending})</CardTitle>
+        {permissionStats.latestPending ? (
+          <button className="permission-overview-item" type="button" onClick={onPermissionRequests}>
+            <span className="permission-overview-mark" aria-hidden="true">{permissionStats.latestPending.type === "Authorization" ? "A" : "D"}</span>
+            <span>
+              <strong lang="ar" dir="rtl">{permissionStats.latestPending.requestedBy}</strong>
+              <small>{permissionStats.latestPending.type}</small>
+            </span>
+            <span className="status-pill status-pill--pending">Pending</span>
+          </button>
+        ) : <div className="empty-copy">No requests</div>}
       </article>
 
       <article className="overview-card owners-card">
@@ -891,7 +897,13 @@ function UsersSection({ users, onAddUser, onNotify }) {
   const [statusFilter, setStatusFilter] = useState("All");
   const [page, setPage] = useState(1);
   const [pageSize, setPageSize] = useState(10);
-  const [permissionStats, setPermissionStats] = useState({ total: 7, active: 3, historical: 4 });
+  const [permissionStats, setPermissionStats] = useState({
+    total: 7,
+    active: 3,
+    historical: 5,
+    pending: 2,
+    latestPending: { requestedBy: "أحمد خالد العتيبي", type: "Authorization" },
+  });
 
   const isDirectoryTab = activeTab === "Company Users" || activeTab === "Invited Users";
 

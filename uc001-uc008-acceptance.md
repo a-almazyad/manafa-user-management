@@ -36,26 +36,30 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 
 ## UC008 — View Permission Request Details
 
-- [x] Show one unified permission-request list.
+- [x] Preserve the production `Previous Requests` and `Pending Requests` internal tabs.
 - [x] Include manual-review requests.
 - [x] Include automatically processed system requests.
 - [x] Include active and historical/completed requests.
 - [x] Preserve pending Authorization and Delegation requests that require Operations action.
-- [x] Show request ID, type, requester, submitted date/time, processing mode, status, and action.
-- [x] Provide search, status, and processing-mode filters.
+- [x] Show compact production-style request rows with request ID, type, requester, submitted date/time, processing mode, status, and eye action.
 - [x] Open a dedicated detail view for every request.
 - [x] Use a compact eye icon for the permission-request detail action.
 - [x] Show request type, source, requester, company, processing mode, and current status.
 - [x] Show requester NID/Iqama, date of birth, mobile number, request date, and all attached documents.
-- [x] Show the requested permissions.
+- [x] Preserve the existing request details → Accept/Reject sequence.
+- [x] Preserve the existing full-page Authorization permission configurator, including Practice Method, Can Delegate, and the permission hierarchy.
+- [x] Preserve the existing Delegation `Choose Delegators` modal.
 - [x] Require Operations to configure at least one permission before approving an Authorization request.
 - [x] Require Operations to select at least one manager before approving a Delegation request.
 - [x] Require a borrower-visible rejection reason before rejecting either request type.
+- [x] Move an accepted request from Pending Requests to Previous Requests.
+- [x] Make every previous accepted request openable from its existing request row.
+- [x] Show an accepted Authorization request’s saved Practice Method, Can Delegate value, and full granted-permission configuration in read-only form.
 - [x] Move an approved Delegation request into manager-signature tracking and issue manager invitations.
 - [x] Record approvals, rejections, configured permissions, and selected managers in the audit history.
 - [x] For delegation requests, show the delegation document.
 - [x] For delegation requests, show all selected managers.
-- [x] Show each manager’s signature status and invitation status.
+- [x] Show each manager’s signature status, signing date/time, and latest SMS time.
 - [x] Show the signed delegation document when available.
 - [x] Allow Operations to resend SMS for pending or expired invitations when the request is active.
 - [x] Update the manager invitation state and last-SMS time after resend.
