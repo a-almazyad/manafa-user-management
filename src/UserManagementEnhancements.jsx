@@ -955,7 +955,16 @@ function SnapshotDetails({ snapshot, onOpenProfile }) {
   );
 }
 
-function OwnershipSnapshotsView({ snapshots, stakeholders, selectedCompany, onCompanyChange, onOpenProfile, onCallWathq, retrievalState }) {
+function OwnershipSnapshotsView({
+  snapshots,
+  stakeholders,
+  selectedCompany,
+  onCompanyChange,
+  onOpenProfile,
+  onCallWathq,
+  retrievalState,
+  retrievalErrors,
+}) {
   const companySnapshots = snapshots[selectedCompany] || [];
   const [selectedSnapshotId, setSelectedSnapshotId] = useState(companySnapshots[0]?.id || "");
   const selectedSnapshot = companySnapshots.find((snapshot) => snapshot.id === selectedSnapshotId) || companySnapshots[0];
@@ -978,7 +987,10 @@ function OwnershipSnapshotsView({ snapshots, stakeholders, selectedCompany, onCo
         <label className="snapshot-company-filter">
           <span>Company</span>
           <select value={selectedCompany} onChange={(event) => changeCompany(event.target.value)}>
-            {companyOptions.map((company) => <option key={company.id} value={company.id}>{company.name} · {company.id}</option>)}
+            {companyOptions.map((company) => {
+              const hasSnapshots = (snapshots[company.id] || []).length > 0;
+              return <option key={company.id} value={company.id}>{company.name} · {company.id}{hasSnapshots ? "" : " · Never called"}</option>;
+            })}
           </select>
         </label>
       </div>
@@ -1001,9 +1013,20 @@ function OwnershipSnapshotsView({ snapshots, stakeholders, selectedCompany, onCo
           <div className="empty-state-icon"><RefreshIcon label="" /></div>
           <h3>No Wathq information has been retrieved for this company yet.</h3>
           <p>Call Wathq to retrieve the corporate owner’s ownership structure using its Unified Number.</p>
+          {retrievalErrors[selectedCompany] ? (
+            <div className="wathq-empty-error" role="alert">
+              <WarningIcon label="" />
+              <div>
+                <strong>Unable to retrieve ownership information from Wathq. [{retrievalErrors[selectedCompany]}]</strong>
+                <span>No snapshot was created. Try the Wathq call again.</span>
+              </div>
+            </div>
+          ) : null}
           <button className="primary-button primary-button--strong" type="button" onClick={() => onCallWathq(uncalledCompany)} disabled={retrievalState[selectedCompany] === "inProgress"}>
             <RefreshIcon label="" size="small" />
-            {retrievalState[selectedCompany] === "inProgress" ? "Calling Wathq…" : "Call Wathq"}
+            {retrievalState[selectedCompany] === "inProgress"
+              ? "Calling Wathq…"
+              : retrievalErrors[selectedCompany] ? "Retry Call Wathq" : "Call Wathq"}
           </button>
         </div>
       )}
@@ -1039,6 +1062,7 @@ export function OwnershipManagement({ onNotify }) {
   const [profile, setProfile] = useState(null);
   const [confirmCompany, setConfirmCompany] = useState(null);
   const [retrievalState, setRetrievalState] = useState({});
+  const [retrievalErrors, setRetrievalErrors] = useState({});
   const [snapshots, setSnapshots] = useState(snapshotsSeed);
   const [snapshotCompany, setSnapshotCompany] = useState(MAIN_COMPANY_ID);
   const [mainCallInProgress, setMainCallInProgress] = useState(false);
@@ -1047,9 +1071,21 @@ export function OwnershipManagement({ onNotify }) {
   function retrieveCorporateOwner() {
     const company = confirmCompany;
     if (!company || retrievalState[company.id] === "inProgress") return;
+    const shouldDemonstrateFailure = company.id === UNCALLED_CORPORATE_OWNER_ID
+      && retrievalState[company.id] !== "failed"
+      && !(snapshots[company.id] || []).length;
     setConfirmCompany(null);
+    setRetrievalErrors((current) => ({ ...current, [company.id]: "" }));
     setRetrievalState((current) => ({ ...current, [company.id]: "inProgress" }));
     window.setTimeout(() => {
+      if (shouldDemonstrateFailure) {
+        setRetrievalState((current) => ({ ...current, [company.id]: "failed" }));
+        setRetrievalErrors((current) => ({ ...current, [company.id]: "WATHQ-503" }));
+        setSnapshotCompany(company.id);
+        onNotify("Wathq retrieval failed. No snapshot was created.");
+        return;
+      }
+
       const existingRows = stakeholders.filter((row) => row.parentId === company.id);
       const rows = (existingRows.length ? existingRows : retrievedCorporateChildrenByCompany[company.id] || [])
         .map((row) => ({ ...row }));
@@ -1071,6 +1107,7 @@ export function OwnershipManagement({ onNotify }) {
         }, ...(current[company.id] || [])],
       }));
       setRetrievalState((current) => ({ ...current, [company.id]: "cooldown" }));
+      setRetrievalErrors((current) => ({ ...current, [company.id]: "" }));
       setSnapshotCompany(company.id);
       onNotify("Ownership retrieved and stored as a new Wathq snapshot");
     }, 700);
@@ -1116,6 +1153,7 @@ export function OwnershipManagement({ onNotify }) {
           onOpenProfile={setProfile}
           onCallWathq={setConfirmCompany}
           retrievalState={retrievalState}
+          retrievalErrors={retrievalErrors}
         />
       ) : null}
       {view === "Change History" ? <OwnershipHistoryView /> : null}

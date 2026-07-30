@@ -4500,6 +4500,38 @@ select:focus-visible {
   font-size: 13px;
 }
 
+.wathq-empty-error {
+  width: min(620px, 100%);
+  display: grid;
+  grid-template-columns: 20px minmax(0, 1fr);
+  align-items: start;
+  gap: 10px;
+  margin: 2px 0 8px;
+  padding: 12px 14px;
+  color: #ae2e24;
+  text-align: left;
+  background: #fff4f3;
+  border: 1px solid #ffbdad;
+  border-radius: 4px;
+}
+
+.wathq-empty-error > div {
+  min-width: 0;
+  display: grid;
+  gap: 2px;
+}
+
+.wathq-empty-error strong {
+  font-size: 13px;
+  line-height: 20px;
+}
+
+.wathq-empty-error span {
+  color: #5d1f1a;
+  font-size: 12px;
+  line-height: 18px;
+}
+
 .ownership-history-table {
   min-width: 1000px;
 }
