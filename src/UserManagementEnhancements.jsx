@@ -810,6 +810,12 @@ function OwnershipHierarchy({
         </div>
       </div>
       <div className="ownership-tree-shell">
+        <div className="ownership-tree-columns" aria-hidden="true">
+          <span />
+          <span>Owner / Company</span>
+          <span>Ownership</span>
+          <span>Action</span>
+        </div>
         <ul className="ownership-tree-list" role="tree" aria-label="Company ownership hierarchy">
           <OwnershipTreeNode
             node={mainCompanyStakeholder}

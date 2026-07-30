@@ -1,65 +1,49 @@
-# Design QA — UC008 production permission journey
+# Design QA — UC001 table alignment and hierarchy balance
 
-## Source visual truth
+## Visual source of truth
 
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.03 AM.png` — overview request card and `Show All`
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.08 AM.png` — `Previous Requests` empty state
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.12 AM.png` — pending request register
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.15 AM.png` — Authorization requester details and Accept/Reject
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.22 AM.png`
-- `/Users/aalmazyad/Desktop/Screenshot 2026-07-30 at 9.12.24 AM.png` — full-page Permissions configurator
+- Existing UC-001 `Current Structure` implementation before this refinement.
+- Durable user direction: move `Owners & Executives` name rows to the left and make the `Ownership Hierarchy` more balanced and consistent.
+- `/private/tmp/uc001-layout-before.png`
 
-## Implementation evidence
+## Final implementation evidence
 
-- `/private/tmp/uc008-wide-overview.png`
-- `/private/tmp/uc008-norm-pending-final.png`
-- `/private/tmp/uc008-norm-detail.png`
-- `/private/tmp/uc008-norm-config.png`
-
-## Combined comparison evidence
-
-- `/private/tmp/uc008-qa-pending-final.png`
-- `/private/tmp/uc008-qa-detail-final.png`
-- `/private/tmp/uc008-qa-config-final.png`
-
-The production webpage was cropped from each supplied screenshot at the shared application bounds and normalized to the same 1475 × 872 CSS-pixel viewport used for the final implementation captures. Each comparison places the source and implementation together in one image.
+- `/private/tmp/uc001-table-final.png` — 1475 × 872 desktop table alignment
+- `/private/tmp/uc001-hierarchy-pass1.png` — default viewport hierarchy
+- `/private/tmp/uc001-hierarchy-narrow.png` — 900 × 760 responsive hierarchy
 
 ## Visual findings
 
-- Information architecture: passed. The overview `Show All` action opens a dedicated `Pending Requests` workspace with the exact production tab order and no overview cards or lower User Management tab strip.
-- Request register: passed. Rows reuse the production pale surface, request icon, type, RTL requester name, date, and status. Prototype-only request IDs, source/processing badges, and eye actions are absent.
-- Request details: passed. `Authorization request`, Pending status, requester facts, `Attached files`, `Proof file`, Reject, and Accept follow the supplied component anatomy and alignment.
-- Permissions configurator: passed. The two production cards, radio groups, complete checkbox hierarchy, collapse affordance, Back, and Approve use the same layout and density. `Manage Delegation` is included in the User Management group.
-- Typography and tokens: passed. The self-hosted Cairo font, Manafa logo, Atlassian icons, blue actions, neutral surfaces, warning lozenges, borders, and focus states remain consistent with the current admin shell.
-- Responsive behavior: passed. The shell stays fixed during subpage navigation, the requester facts reflow at narrower content widths, and the six overview cards remain 3 × 2 at 1920 × 1080.
-- Accessibility: passed. Tabs expose selected state, the full request row is keyboard-actionable, Arabic names use RTL, controls have native labels, the rejection error is announced, and saved historical controls are disabled.
+- Owners & Executives table: passed. Arabic names retain RTL glyph direction while aligning to the left edge of the Name column. ID, Role, and Ownership Percentage keep their existing LTR alignment and table rhythm.
+- Hierarchy columns: passed. Every owner/company name begins at one consistent horizontal origin. Ownership percentages and Retrieve Ownership actions use fixed, predictable columns.
+- Ownership depth: passed. Only the expand/collapse control is indented; deeper Arabic names no longer drift to the right.
+- Row balance: passed. A compact column-label band clarifies the owner, percentage, and action areas. Root, direct, and indirect levels preserve the existing subtle Atlassian neutral/blue treatments.
+- Responsive behavior: passed. At 900 × 760 the hierarchy removes the desktop label band, preserves aligned name and percentage columns, and stacks Retrieve Ownership beneath the corporate owner name. The page does not gain global horizontal overflow.
+- Typography and design system: passed. Cairo, Atlassian icons, blue links/actions, compact controls, borders, hover states, and focus behavior remain unchanged.
 
 ## Functional paths tested
 
-- Overview `Show All` → Previous Requests / Pending Requests.
-- Pending Authorization → requester details → Reject → required reason validation → Save → request moves to Previous Requests.
-- Pending Authorization → Accept → Permissions → required permission selection → Approve → request moves to Previous Requests as Accepted.
-- Previous accepted Authorization → requester details → View Permissions → exact saved Practice Method, Can Delegate, and checked permissions in the same disabled read-only configurator with no Approve action.
-- Pending Delegation → requester details → Accept → working `Choose Delegators` modal.
-- Header and sidebar remain stable throughout the journey; no shell scroll displacement remains.
+- Expanded and collapsed `الشركة الوطنية للاستثمار الصناعي`; nested owners hide and return correctly.
+- Opened Retrieve Ownership for the same corporate owner; the Wathq confirmation dialog appeared and Cancel closed it without changing data.
+- Verified at 1475 × 872 and 900 × 760.
+- Production build completed successfully.
+- No lint script exists in the project, so lint could not be run.
 
 ## Comparison history
 
 ### Pass 1
 
-- [P1] Register rows exposed prototype metadata and a separate eye action instead of matching production.
-- [P1] Accepted Authorization displayed its saved permissions inline on a new-looking detail layout.
-- [P2] The request card and permission cards used denser, smaller component anatomy than the supplied screenshots.
-- [P2] The admin shell could programmatically scroll the header out of view after focused actions.
+- [P1] Owners & Executives names were forced to the right side of the Name column.
+- [P1] Hierarchy indentation shifted the entire row, causing names and values to lose a consistent column origin across ownership levels.
+- [P2] Ownership percentages and optional actions did not have a clearly balanced column structure.
 
-### Pass 2
+### Final pass
 
-- Removed request IDs, sources, processing badges, read-only badges, and eye actions from the production-shaped pages.
-- Restored the production requester page and full-page Permissions configurator.
-- Moved historical saved configuration behind `View Permissions` on that same configurator.
-- Matched row width, RTL name placement, surfaces, spacing, button treatment, and responsive behavior.
-- Prevented the fixed admin shell from becoming a hidden programmatic scroll container.
+- Left-aligned the RTL name controls inside the UC-001 table.
+- Rebuilt hierarchy rows on a four-column CSS grid: level control, owner/company, ownership, and action.
+- Moved depth indentation into the level-control column only.
+- Added responsive action stacking without introducing page-level overflow.
 
-No actionable P0, P1, or P2 visual differences remain in the tested UC008 states.
+No actionable P0, P1, or P2 visual differences remain in the tested states.
 
 final result: passed
