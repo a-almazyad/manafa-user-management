@@ -5610,3 +5610,479 @@ select:focus-visible {
     border-bottom: 1px solid #ebecf0;
   }
 }
+
+/* UC-008 production permission journey */
+.admin-app {
+  overflow: clip;
+}
+
+.permission-card-title {
+  display: inline-flex;
+  align-items: center;
+  gap: 9px;
+}
+
+.permission-card-dot {
+  width: 7px;
+  height: 7px;
+  flex: 0 0 auto;
+  background: #e2483d;
+  border-radius: 50%;
+}
+
+.permission-overview-item {
+  grid-template-columns: minmax(0, 1fr) auto 20px;
+  gap: 12px;
+  min-height: 92px;
+  margin-top: 18px;
+  padding: 14px 16px;
+}
+
+.permission-overview-copy {
+  min-width: 0;
+  width: max-content;
+  max-width: 100%;
+  display: grid;
+  justify-self: start;
+  gap: 4px;
+}
+
+.permission-overview-item > .status-pill {
+  min-width: auto;
+  display: inline-flex;
+}
+
+.permission-overview-item strong {
+  overflow: visible;
+  color: #172b4d;
+  direction: rtl;
+  text-align: right;
+  text-overflow: clip;
+  white-space: normal;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.permission-overview-item small {
+  color: #44546f;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.permission-overview-chevron {
+  display: grid;
+  place-items: center;
+  color: #44546f;
+}
+
+.permission-request-header {
+  min-height: 78px;
+  padding: 0;
+}
+
+.permission-request-header h2 {
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.permission-register-panel {
+  min-height: 315px;
+  padding: 0 30px 28px;
+  border: 0;
+  border-radius: 7px;
+}
+
+.permission-register-tabs {
+  gap: 44px;
+  min-height: 82px;
+}
+
+.permission-register-tabs button {
+  height: 65px;
+  padding: 0 0 12px;
+  font-size: 15px;
+}
+
+.permission-request-list {
+  width: 100%;
+  gap: 12px;
+  padding: 30px 16px 0;
+}
+
+.permission-request-row {
+  width: min(500px, 100%);
+  min-height: 124px;
+  grid-template-columns: 48px minmax(180px, 1fr) 100px auto;
+  gap: 14px;
+  padding: 18px 20px;
+  background: #f7f8f9;
+  border: 0;
+  border-radius: 8px;
+}
+
+.permission-request-row:hover {
+  background: #f1f2f4;
+  border-color: transparent;
+}
+
+.request-type-icon {
+  position: relative;
+  width: 38px;
+  height: 38px;
+  display: grid;
+  place-items: center;
+  color: #6b778c;
+}
+
+.request-type-icon > span,
+.request-type-icon svg {
+  width: 30px;
+  height: 30px;
+}
+
+.request-row-person {
+  width: max-content;
+  max-width: 100%;
+  justify-self: start;
+  gap: 6px;
+}
+
+.request-row-person strong {
+  color: #101214;
+  font-size: 17px;
+  line-height: 22px;
+}
+
+.request-row-person > span {
+  overflow: visible;
+  text-overflow: clip;
+  white-space: normal;
+  font-size: 15px;
+  line-height: 22px;
+  font-weight: 650;
+}
+
+.permission-request-row time {
+  color: #626f86;
+  font-size: 14px;
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.permission-register-empty {
+  min-height: 205px;
+  color: #626f86;
+  font-size: 15px;
+}
+
+.request-page-heading,
+.permission-flow-heading {
+  min-height: 82px;
+}
+
+.request-page-heading h2,
+.permission-flow-heading h2 {
+  color: #101214;
+  font-size: 22px;
+  line-height: 30px;
+}
+
+.request-page-heading > button,
+.permission-flow-heading > button {
+  min-height: 36px;
+  padding: 8px 12px;
+  color: #626f86;
+  font-size: 15px;
+}
+
+.production-request-card {
+  margin-bottom: 18px;
+  padding: 4px 20px 18px;
+  border: 0;
+  border-radius: 8px;
+}
+
+.production-request-card-heading {
+  min-height: 74px;
+  padding: 14px 0 8px;
+  border-bottom: 0;
+}
+
+.production-request-card-heading h3 {
+  color: #101214;
+  font-size: 16px;
+  line-height: 22px;
+}
+
+.production-request-body {
+  padding: 0;
+}
+
+.production-request-body h4 {
+  margin: 0 0 12px;
+  color: #101214;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.production-request-body h4:not(:first-child) {
+  margin-top: 28px;
+}
+
+.requester-summary {
+  grid-template-columns: minmax(310px, 1.5fr) repeat(3, minmax(160px, 1fr));
+  border: 0;
+  border-radius: 8px;
+}
+
+.requester-summary > div {
+  min-height: 106px;
+  padding: 18px 20px;
+  border-right: 0;
+}
+
+.requester-summary dt {
+  color: #626f86;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.requester-summary dd {
+  color: #101214;
+  font-size: 13px;
+  line-height: 19px;
+}
+
+.requester-summary .requester-identity {
+  gap: 16px;
+}
+
+.requester-avatar {
+  width: 44px;
+  height: 44px;
+  color: #fff;
+  background: #6b778c;
+}
+
+.requester-identity strong {
+  color: #101214;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.requester-identity small {
+  color: #626f86;
+  font-size: 12px;
+  line-height: 18px;
+}
+
+.production-attached-files {
+  align-items: stretch;
+}
+
+.production-attached-files > button {
+  width: min(300px, 100%);
+  min-height: 52px;
+  justify-content: flex-start;
+  gap: 12px;
+  padding: 0 16px;
+  color: #172b4d;
+  background: #f7f8f9;
+  border: 0;
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.production-request-actions {
+  min-height: 74px;
+  gap: 14px;
+  padding: 20px 0 0;
+  border-top: 0;
+}
+
+.production-request-actions .danger-ghost-button,
+.production-request-actions .primary-button {
+  width: 160px;
+  min-height: 40px;
+}
+
+.production-request-actions .danger-ghost-button {
+  color: #e2483d;
+  background: #fff;
+  border: 1px solid #e2483d;
+}
+
+.production-request-actions .danger-ghost-button:hover {
+  color: #ae2e24;
+  background: #fff7f6;
+}
+
+.permission-configuration {
+  gap: 28px;
+  padding: 0;
+}
+
+.permission-method-card {
+  padding: 24px 20px;
+  background: #f7f8f9;
+  border: 0;
+  border-radius: 8px;
+}
+
+.permission-method-card h3 {
+  margin: 0 0 20px;
+  color: #101214;
+  font-size: 15px;
+  line-height: 21px;
+}
+
+.permission-method-options {
+  grid-template-columns: minmax(240px, 310px) minmax(240px, 310px);
+  gap: 28px;
+}
+
+.permission-method-options fieldset {
+  gap: 14px;
+}
+
+.permission-method-options legend {
+  margin-bottom: 12px;
+  color: #101214;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.permission-method-options label,
+.permission-tree label {
+  gap: 8px;
+  font-size: 14px;
+  line-height: 20px;
+}
+
+.permission-method-options input,
+.permission-tree input {
+  width: 16px;
+  height: 16px;
+}
+
+.permission-tree {
+  gap: 12px;
+  padding: 24px 20px 28px;
+  background: #f7f8f9;
+  border: 0;
+  border-radius: 8px;
+}
+
+.permission-tree-root {
+  min-height: 32px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.permission-tree-root > label {
+  min-height: 32px;
+}
+
+.permission-tree-root strong {
+  color: #101214;
+  font-size: 14px;
+}
+
+.permission-tree-root > span {
+  color: #44546f;
+}
+
+.permission-tree-group {
+  gap: 7px;
+  margin-left: 24px;
+}
+
+.permission-tree-group-label {
+  min-height: 32px;
+  font-weight: 650;
+}
+
+.permission-tree-children {
+  gap: 8px;
+  margin-left: 28px;
+}
+
+.permission-tree-children label {
+  min-height: 28px;
+}
+
+.permission-config-actions {
+  min-height: 96px;
+  gap: 28px;
+  padding-right: 0;
+}
+
+.permission-config-actions .secondary-button {
+  min-width: 80px;
+  color: #101214;
+  background: transparent;
+  border-color: transparent;
+}
+
+.permission-approve-button {
+  min-width: 140px;
+  min-height: 40px;
+}
+
+.permission-configuration.is-readonly input:disabled {
+  opacity: 0.9;
+  cursor: default;
+}
+
+@container admin-content (max-width: 980px) {
+  .permission-request-row {
+    grid-template-columns: 42px minmax(190px, 1fr) 112px auto;
+  }
+
+  .requester-summary {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@container admin-content (max-width: 700px) {
+  .permission-register-panel {
+    padding-inline: 18px;
+  }
+
+  .permission-register-tabs {
+    gap: 24px;
+  }
+
+  .permission-request-list {
+    padding-inline: 0;
+  }
+
+  .permission-request-row {
+    grid-template-columns: 40px minmax(0, 1fr) auto;
+    min-height: 110px;
+    padding: 15px;
+  }
+
+  .permission-request-row time {
+    display: none;
+  }
+
+  .requester-summary {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .requester-summary > div {
+    min-height: 80px;
+    border-bottom: 1px solid #ebecf0;
+  }
+
+  .requester-summary > div:last-child {
+    border-bottom: 0;
+  }
+
+  .permission-method-options {
+    grid-template-columns: minmax(0, 1fr);
+  }
+}

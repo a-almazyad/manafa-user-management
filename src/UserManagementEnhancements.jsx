@@ -1,10 +1,14 @@
 import { useEffect, useMemo, useState } from "react";
+import AttachmentIcon from "@atlaskit/icon/core/attachment";
 import CheckCircleIcon from "@atlaskit/icon/core/check-circle";
 import ChevronDownIcon from "@atlaskit/icon/core/chevron-down";
 import ChevronRightIcon from "@atlaskit/icon/core/chevron-right";
+import ChevronUpIcon from "@atlaskit/icon/core/chevron-up";
 import DownloadIcon from "@atlaskit/icon/core/download";
 import EyeOpenIcon from "@atlaskit/icon/core/eye-open";
 import LockIcon from "@atlaskit/icon/core/lock-locked";
+import PersonAddedIcon from "@atlaskit/icon/core/person-added";
+import PersonIcon from "@atlaskit/icon/core/person";
 import RefreshIcon from "@atlaskit/icon/core/refresh";
 import WarningIcon from "@atlaskit/icon/core/warning";
 
@@ -542,7 +546,7 @@ const permissionGroups = [
   {
     id: "user-management",
     label: "User Management",
-    permissions: ["View Users", "Manage Users"],
+    permissions: ["View Users", "Manage Users", "Manage Delegation"],
   },
   {
     id: "company-management",
@@ -560,7 +564,11 @@ const configurablePermissions = permissionGroups.flatMap((group) => group.permis
 
 function resetMainHorizontalScroll() {
   const scrollContainer = document.querySelector(".content-scroll");
-  window.requestAnimationFrame(() => scrollContainer?.scrollTo({ top: 0, left: 0 }));
+  const appShell = document.querySelector(".admin-app");
+  window.requestAnimationFrame(() => {
+    appShell?.scrollTo({ top: 0, left: 0 });
+    scrollContainer?.scrollTo({ top: 0, left: 0 });
+  });
 }
 
 function getStakeholderRetrievalDate(stakeholder, snapshots) {
@@ -1149,6 +1157,27 @@ function displayRequestStatus(status) {
   return status;
 }
 
+function productionDate(value) {
+  if (!value) return "—";
+  const match = value.match(/^(\d{1,2})\s([A-Z][a-z]{2})\s(\d{4})/);
+  if (!match) return value;
+  const month = {
+    Jan: "01",
+    Feb: "02",
+    Mar: "03",
+    Apr: "04",
+    May: "05",
+    Jun: "06",
+    Jul: "07",
+    Aug: "08",
+    Sep: "09",
+    Oct: "10",
+    Nov: "11",
+    Dec: "12",
+  }[match[2]];
+  return `${String(match[1]).padStart(2, "0")}/${month}/${match[3]}`;
+}
+
 function PermissionConfigurationPanel({
   permissions,
   practiceMethod,
@@ -1219,14 +1248,17 @@ function PermissionConfigurationPanel({
 
       <fieldset className="permission-tree" disabled={readOnly}>
         <legend className="sr-only">System permissions</legend>
-        <label className="permission-tree-root">
-          <input
-            type="checkbox"
-            checked={allSelected}
-            onChange={(event) => onPermissionsChange?.(event.target.checked ? configurablePermissions : [])}
-          />
-          <strong>System Permissions</strong>
-        </label>
+        <div className="permission-tree-root">
+          <label>
+            <input
+              type="checkbox"
+              checked={allSelected}
+              onChange={(event) => onPermissionsChange?.(event.target.checked ? configurablePermissions : [])}
+            />
+            <strong>System Permissions</strong>
+          </label>
+          <ChevronUpIcon label="Collapse system permissions" size="small" />
+        </div>
         {permissionGroups.map((group) => {
           const groupSelected = group.permissions.every((permission) => permissions.includes(permission));
           return (
@@ -1255,7 +1287,7 @@ function PermissionConfigurationPanel({
   );
 }
 
-function PermissionConfigurator({ request, onBack, onApprove }) {
+function PermissionConfigurator({ request, onBack, onApprove, readOnly = false }) {
   const [selectedPermissions, setSelectedPermissions] = useState(request.permissions);
   const [practiceMethod, setPracticeMethod] = useState(request.practiceMethod || "Individually");
   const [canDelegate, setCanDelegate] = useState(request.canDelegate || "Yes");
@@ -1263,6 +1295,10 @@ function PermissionConfigurator({ request, onBack, onApprove }) {
 
   function submit(event) {
     event.preventDefault();
+    if (readOnly) {
+      onBack();
+      return;
+    }
     if (!selectedPermissions.length) {
       setError("Select at least one permission before approving this request.");
       return;
@@ -1285,6 +1321,7 @@ function PermissionConfigurator({ request, onBack, onApprove }) {
         permissions={selectedPermissions}
         practiceMethod={practiceMethod}
         canDelegate={canDelegate}
+        readOnly={readOnly}
         onPermissionsChange={(value) => { setSelectedPermissions(value); setError(""); }}
         onPracticeMethodChange={setPracticeMethod}
         onCanDelegateChange={setCanDelegate}
@@ -1292,7 +1329,7 @@ function PermissionConfigurator({ request, onBack, onApprove }) {
       {error ? <div className="decision-error permission-config-error" role="alert"><WarningIcon label="" size="small" />{error}</div> : null}
       <div className="permission-config-actions">
         <button className="secondary-button" type="button" onClick={onBack}>Back</button>
-        <button className="primary-button permission-approve-button" type="submit">Approve</button>
+        {!readOnly ? <button className="primary-button permission-approve-button" type="submit">Approve</button> : null}
       </div>
     </form>
   );
@@ -1371,20 +1408,20 @@ function RejectionModal({ request, onClose, onReject }) {
       <section className="enhancement-modal request-decision-modal" role="dialog" aria-modal="true" aria-labelledby="reject-request-title">
         <form onSubmit={submit}>
           <div className="modal-header">
-            <div><span className="modal-eyebrow">{request.id}</span><h2 id="reject-request-title">Reject {request.type} request</h2></div>
+            <div><h2 id="reject-request-title">Rejection reason</h2></div>
             <button type="button" onClick={onClose} aria-label="Close">×</button>
           </div>
           <div className="enhancement-modal-body request-decision-body">
             <label className="rejection-reason-field">
               <span>Rejection reason <b aria-hidden="true">*</b></span>
               <textarea value={reason} onChange={(event) => { setReason(event.target.value); setError(""); }} rows="5" placeholder="Explain why the request is being rejected" />
-              <small>This reason will be visible to the borrower.</small>
+              <small>This reason will be shared with the requester.</small>
             </label>
             {error ? <div className="decision-error" role="alert"><WarningIcon label="" size="small" />{error}</div> : null}
           </div>
           <div className="modal-footer">
             <button className="secondary-button" type="button" onClick={onClose}>Cancel</button>
-            <button className="danger-button" type="submit">Reject request</button>
+            <button className="primary-button" type="submit">Save</button>
           </div>
         </form>
       </section>
@@ -1394,19 +1431,14 @@ function RejectionModal({ request, onClose, onReject }) {
 
 function RequestHistoryCard({ request, onOpenRequest }) {
   return (
-    <button className="permission-request-row" type="button" onClick={() => onOpenRequest(request.id)} aria-label={`View ${request.type} request ${request.id}`}>
-      <span className="request-type-mark" aria-hidden="true">{request.type === "Authorization" ? "A" : "D"}</span>
+    <button className="permission-request-row" type="button" onClick={() => onOpenRequest(request.id)} aria-label={`Open ${request.type} request from ${request.requestedBy}`}>
+      <span className="request-type-icon" aria-hidden="true"><PersonAddedIcon label="" /></span>
       <span className="request-row-person">
         <strong>{request.type}</strong>
         <span lang="ar" dir="rtl">{request.requestedBy}</span>
-        <small>{request.id}</small>
       </span>
-      <time>{request.submittedAt}</time>
-      <span className="request-row-badges">
-        {request.processing === "Automatic" ? <Badge tone="purple">Automatic</Badge> : null}
-        <Badge tone={statusTone(request.status)}>{displayRequestStatus(request.status)}</Badge>
-      </span>
-      <span className="request-row-eye" title="View details"><EyeOpenIcon label="" size="small" /></span>
+      <time dateTime={request.submittedAt}>{productionDate(request.submittedAt)}</time>
+      <Badge tone={statusTone(request.status)}>{displayRequestStatus(request.status)}</Badge>
     </button>
   );
 }
@@ -1435,17 +1467,18 @@ function PermissionRequestList({ requests, onOpenRequest }) {
         </div>
         <div className="permission-request-list">
           {visibleRequests.map((request) => <RequestHistoryCard key={request.id} request={request} onOpenRequest={onOpenRequest} />)}
-          {!visibleRequests.length ? <div className="permission-register-empty">No Records Found</div> : null}
+          {!visibleRequests.length ? <div className="permission-register-empty">No Records found</div> : null}
         </div>
       </section>
     </>
   );
 }
 
-function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept, onReject }) {
+function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept, onReject, onViewPermissions }) {
   const canReview = request.status === "Pending review" && request.processing === "Manual review";
   const requestFiles = request.files || (request.delegationDocument ? [request.delegationDocument] : []);
   const isPrevious = request.status !== "Pending review";
+  const canViewSavedPermissions = isPrevious && request.type === "Authorization" && request.status === "Accepted";
 
   return (
     <div className="production-request-detail">
@@ -1456,10 +1489,8 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept
 
       <section className="production-request-card">
         <div className="production-request-card-heading">
-          <div><h3>{request.type} request</h3><span>{request.id} · {request.source}</span></div>
+          <div><h3>{request.type} request</h3></div>
           <div className="request-detail-statuses">
-            {request.processing === "Automatic" ? <Badge tone="purple">Automatic</Badge> : null}
-            {request.completed ? <Badge tone="neutral"><LockIcon label="" size="small" />Read-only</Badge> : null}
             <Badge tone={statusTone(request.status)}>{displayRequestStatus(request.status)}</Badge>
           </div>
         </div>
@@ -1468,19 +1499,19 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept
           <h4>Requester</h4>
           <dl className="requester-summary">
             <div className="requester-identity">
-              <span className="requester-avatar" aria-hidden="true">{request.requestedBy.slice(0, 1)}</span>
+              <span className="requester-avatar" aria-hidden="true"><PersonIcon label="" /></span>
               <span><strong lang="ar" dir="rtl">{request.requestedBy}</strong><small>{request.requesterNationalId}</small></span>
             </div>
-            <div><dt>Request Date</dt><dd>{request.submittedAt}</dd></div>
-            <div><dt>Date Of Birth</dt><dd>{request.requesterDob}</dd></div>
+            <div><dt>Request Date</dt><dd>{productionDate(request.submittedAt)}</dd></div>
+            <div><dt>Date Of Birth</dt><dd>{productionDate(request.requesterDob)}</dd></div>
             <div><dt>Phone Number</dt><dd>{request.requesterPhone}</dd></div>
           </dl>
 
           <h4>Attached files</h4>
           <div className="production-attached-files">
-            {requestFiles.map((filename) => (
+            {requestFiles.map((filename, index) => (
               <button type="button" key={filename} onClick={() => onOpenDocument({ filename, signed: false, requestType: request.type })}>
-                <EyeOpenIcon label="" size="small" /><span>{filename}</span>
+                <AttachmentIcon label="" size="small" /><span>{index === 0 ? "Proof file" : `Attached file ${index + 1}`}</span>
               </button>
             ))}
             {request.type === "Delegation" ? (
@@ -1499,27 +1530,17 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept
             <button className="primary-button request-approve-button" type="button" onClick={onAccept}>Accept</button>
           </div>
         ) : null}
+        {canViewSavedPermissions ? (
+          <div className="production-request-actions">
+            <button className="primary-button request-approve-button" type="button" onClick={onViewPermissions}>View Permissions</button>
+          </div>
+        ) : null}
       </section>
 
       {request.rejectionReason ? (
         <section className="request-detail-card rejection-detail-card">
           <div className="detail-card-title"><h3>Rejection reason</h3><span>Visible to borrower</span></div>
           <p>{request.rejectionReason}</p>
-        </section>
-      ) : null}
-
-      {isPrevious && request.type === "Authorization" ? (
-        <section className="historical-permissions-card">
-          <div className="historical-section-title">
-            <div><h3>Granted permissions</h3><span>Configuration saved when this authorization request was accepted.</span></div>
-            <Badge tone="neutral"><LockIcon label="" size="small" />Read-only</Badge>
-          </div>
-          <PermissionConfigurationPanel
-            permissions={request.permissions}
-            practiceMethod={request.practiceMethod}
-            canDelegate={request.canDelegate}
-            readOnly
-          />
         </section>
       ) : null}
 
@@ -1563,14 +1584,16 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept
         </section>
       ) : null}
 
-      <section className="request-detail-card audit-card">
-        <div className="detail-card-title"><h3>Audit log</h3><span>All request actions and status changes</span></div>
-        <ol className="audit-list">
-          {request.audit.map((event) => (
-            <li key={event.id}><span className="audit-dot" /><div><strong>{event.event}</strong><span>{event.actor}</span></div><time>{event.at}</time></li>
-          ))}
-        </ol>
-      </section>
+      {isPrevious ? (
+        <section className="request-detail-card audit-card">
+          <div className="detail-card-title"><h3>Audit log</h3><span>All request actions and status changes</span></div>
+          <ol className="audit-list">
+            {request.audit.map((event) => (
+              <li key={event.id}><span className="audit-dot" /><div><strong>{event.event}</strong><span>{event.actor}</span></div><time>{event.at}</time></li>
+            ))}
+          </ol>
+        </section>
+      ) : null}
     </div>
   );
 }
@@ -1715,6 +1738,8 @@ export function PermissionRequests({ onNotify, onStatsChange }) {
     <div className="enhancement-view permission-requests-view">
       {selectedRequest && decisionMode === "permissions" ? (
         <PermissionConfigurator request={selectedRequest} onBack={() => setDecisionMode("")} onApprove={approveRequest} />
+      ) : selectedRequest && decisionMode === "view-permissions" ? (
+        <PermissionConfigurator request={selectedRequest} onBack={() => setDecisionMode("")} onApprove={approveRequest} readOnly />
       ) : selectedRequest ? (
         <RequestDetails
           request={selectedRequest}
@@ -1723,6 +1748,7 @@ export function PermissionRequests({ onNotify, onStatsChange }) {
           onOpenDocument={setDocumentPreview}
           onAccept={acceptRequest}
           onReject={() => setDecisionMode("reject")}
+          onViewPermissions={() => { setDecisionMode("view-permissions"); resetMainHorizontalScroll(); }}
         />
       ) : <PermissionRequestList requests={requests} onOpenRequest={openRequest} />}
 

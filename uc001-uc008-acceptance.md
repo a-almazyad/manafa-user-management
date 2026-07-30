@@ -46,10 +46,10 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 - [x] Include automatically processed system requests.
 - [x] Include active and historical/completed requests.
 - [x] Preserve pending Authorization and Delegation requests that require Operations action.
-- [x] Show compact production-style request rows with request ID, type, requester, submitted date/time, processing mode, status, and eye action.
+- [x] Show compact production-style request rows with request type, RTL requester name, request date, and status only.
 - [x] Open a dedicated detail view for every request.
-- [x] Use a compact eye icon for the permission-request detail action.
-- [x] Show request type, source, requester, company, processing mode, and current status.
+- [x] Make the full compact request row the detail action, matching production without an added eye button.
+- [x] Keep prototype request IDs, sources, processing badges, and read-only badges out of the production-shaped row and requester page.
 - [x] Show requester NID/Iqama, date of birth, mobile number, request date, and all attached documents.
 - [x] Preserve the existing request details → Accept/Reject sequence.
 - [x] Preserve the existing full-page Authorization permission configurator, including Practice Method, Can Delegate, and the permission hierarchy.
@@ -59,7 +59,7 @@ Source: [User Management Post-Launch Enhancements](https://manafaco.atlassian.ne
 - [x] Require a borrower-visible rejection reason before rejecting either request type.
 - [x] Move an accepted request from Pending Requests to Previous Requests.
 - [x] Make every previous accepted request openable from its existing request row.
-- [x] Show an accepted Authorization request’s saved Practice Method, Can Delegate value, and full granted-permission configuration in read-only form.
+- [x] Open an accepted Authorization request through the same requester page, then show its saved Practice Method, Can Delegate value, and full granted-permission configuration through `View Permissions` on the same configurator in read-only form.
 - [x] Move an approved Delegation request into manager-signature tracking and issue manager invitations.
 - [x] Record approvals, rejections, configured permissions, and selected managers in the audit history.
 - [x] For delegation requests, show the delegation document.

@@ -464,15 +464,15 @@ function OverviewCards({ onPermissionRequests, permissionStats }) {
       </article>
 
       <article className="overview-card permission-overview-card">
-        <CardTitle showAll onShowAll={onPermissionRequests}>Permissions Request ({permissionStats.pending})</CardTitle>
+        <CardTitle showAll onShowAll={onPermissionRequests}><span className="permission-card-title"><span className="permission-card-dot" aria-hidden="true" />Permissions Request ({permissionStats.pending})</span></CardTitle>
         {permissionStats.latestPending ? (
           <button className="permission-overview-item" type="button" onClick={onPermissionRequests}>
-            <span className="permission-overview-mark" aria-hidden="true">{permissionStats.latestPending.type === "Authorization" ? "A" : "D"}</span>
-            <span>
+            <span className="permission-overview-copy">
               <strong lang="ar" dir="rtl">{permissionStats.latestPending.requestedBy}</strong>
               <small>{permissionStats.latestPending.type}</small>
             </span>
             <span className="status-pill status-pill--pending">Pending</span>
+            <span className="permission-overview-chevron" aria-hidden="true"><ChevronRightIcon label="" size="small" /></span>
           </button>
         ) : <div className="empty-copy">No requests</div>}
       </article>
