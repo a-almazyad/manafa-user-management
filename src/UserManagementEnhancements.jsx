@@ -938,7 +938,7 @@ function SnapshotDetails({ snapshot, onOpenProfile }) {
       </dl>
       <div className="table-shell enhancement-table-shell snapshot-result-table-shell">
         <table className="users-table enhancement-table snapshot-result-table">
-          <thead><tr><th>Name</th><th>ID / Unified Number</th><th>Role</th><th>Ownership %</th><th>Level</th></tr></thead>
+          <thead><tr><th>Name</th><th>ID / Unified Number</th><th>Role</th><th>Ownership %</th></tr></thead>
           <tbody>
             {snapshot.rows.map((row) => (
               <tr key={`${snapshot.id}-${row.key}`}>
@@ -946,7 +946,6 @@ function SnapshotDetails({ snapshot, onOpenProfile }) {
                 <td className="ownership-number">{row.id}</td>
                 <td>{row.role} · {row.designation}</td>
                 <td className="ownership-number">{row.ownership == null ? "—" : `${row.ownership}%`}</td>
-                <td><Badge tone={row.level === "Direct" ? "success" : "warning"}>{row.level}</Badge></td>
               </tr>
             ))}
           </tbody>
@@ -1020,11 +1019,11 @@ function OwnershipHistoryView() {
       </div>
       <div className="table-shell enhancement-table-shell">
         <table className="users-table enhancement-table ownership-history-table">
-          <thead><tr><th>Changed information</th><th>Previous value</th><th>Updated value</th><th>Change date &amp; time</th><th>Change source</th></tr></thead>
+          <thead><tr><th>Changed information</th><th>Previous value</th><th>Updated value</th><th>Change date &amp; time</th></tr></thead>
           <tbody>
             {changeHistory.map((change) => (
               <tr key={change.id}>
-                <td>{change.information}</td><td>{change.previous}</td><td>{change.updated}</td><td>{change.changedAt}</td><td>{change.source}</td>
+                <td>{change.information}</td><td>{change.previous}</td><td>{change.updated}</td><td>{change.changedAt}</td>
               </tr>
             ))}
           </tbody>
@@ -1590,16 +1589,6 @@ function RequestDetails({ request, onBack, onResendSms, onOpenDocument, onAccept
         </section>
       ) : null}
 
-      {isPrevious ? (
-        <section className="request-detail-card audit-card">
-          <div className="detail-card-title"><h3>Audit log</h3><span>All request actions and status changes</span></div>
-          <ol className="audit-list">
-            {request.audit.map((event) => (
-              <li key={event.id}><span className="audit-dot" /><div><strong>{event.event}</strong><span>{event.actor}</span></div><time>{event.at}</time></li>
-            ))}
-          </ol>
-        </section>
-      ) : null}
     </div>
   );
 }

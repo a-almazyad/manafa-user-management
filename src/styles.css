@@ -4456,14 +4456,13 @@ select:focus-visible {
 }
 
 .snapshot-result-table {
-  min-width: 850px;
+  min-width: 760px;
 }
 
-.snapshot-result-table th:nth-child(1) { width: 25%; }
-.snapshot-result-table th:nth-child(2) { width: 18%; }
-.snapshot-result-table th:nth-child(3) { width: 27%; }
-.snapshot-result-table th:nth-child(4) { width: 14%; }
-.snapshot-result-table th:nth-child(5) { width: 16%; }
+.snapshot-result-table th:nth-child(1) { width: 30%; }
+.snapshot-result-table th:nth-child(2) { width: 22%; }
+.snapshot-result-table th:nth-child(3) { width: 30%; }
+.snapshot-result-table th:nth-child(4) { width: 18%; }
 
 .wathq-empty-state {
   min-height: 370px;
@@ -4502,14 +4501,13 @@ select:focus-visible {
 }
 
 .ownership-history-table {
-  min-width: 1300px;
+  min-width: 1000px;
 }
 
-.ownership-history-table th:nth-child(1) { width: 27%; }
-.ownership-history-table th:nth-child(2) { width: 16%; }
-.ownership-history-table th:nth-child(3) { width: 16%; }
-.ownership-history-table th:nth-child(4) { width: 17%; }
-.ownership-history-table th:nth-child(5) { width: 24%; }
+.ownership-history-table th:nth-child(1) { width: 34%; }
+.ownership-history-table th:nth-child(2) { width: 20%; }
+.ownership-history-table th:nth-child(3) { width: 20%; }
+.ownership-history-table th:nth-child(4) { width: 26%; }
 
 .permission-request-header {
   min-height: 84px;
@@ -4860,54 +4858,6 @@ select:focus-visible {
 .managers-table th:nth-child(5) { width: 12%; }
 .managers-table th:nth-child(6) { width: 14%; }
 .managers-table th:nth-child(7) { width: 20%; }
-
-.audit-list {
-  margin: 0;
-  padding: 7px 16px 13px;
-  list-style: none;
-}
-
-.audit-list li {
-  min-height: 58px;
-  display: grid;
-  grid-template-columns: 18px minmax(0, 1fr) auto;
-  align-items: center;
-  gap: 8px;
-  border-bottom: 1px solid #ebecf0;
-}
-
-.audit-list li:last-child {
-  border-bottom: 0;
-}
-
-.audit-dot {
-  width: 8px;
-  height: 8px;
-  justify-self: center;
-  background: #0c66e4;
-  border-radius: 50%;
-}
-
-.audit-list li > div {
-  min-width: 0;
-  display: grid;
-  gap: 1px;
-}
-
-.audit-list strong {
-  color: #172b4d;
-  font-size: 12px;
-}
-
-.audit-list li > div > span,
-.audit-list time {
-  color: #6b778c;
-  font-size: 11px;
-}
-
-.audit-list time {
-  white-space: nowrap;
-}
 
 .request-decision-modal {
   width: min(700px, calc(100vw - 48px));
